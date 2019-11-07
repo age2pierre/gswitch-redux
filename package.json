@@ -4,7 +4,8 @@
   "description": "A little game to try out react-three-fiber",
   "main": "src/index.tsx",
   "scripts": {
-    "build": "parcel build src/index.html --experimental-scope-hoisting",
+    "build": "npm run clean && parcel build src/index.html --experimental-scope-hoisting",
+    "clean": "rimraf dist .cache",
     "start": "parcel serve src/index.html --open --no-autoinstall",
     "lint": "tslint -c tslint.json --fix 'src/**/*.{ts,tsx}'"
   },
@@ -18,6 +19,10 @@
     }
   },
   "lint-staged": {
+    "package.json": [
+      "sort-package-json",
+      "git add"
+    ],
     "*.{ts,tsx}": [
       "tslint --fix",
       "git add"
@@ -31,12 +36,21 @@
     "react": "^16.11.0",
     "react-dom": "^16.11.0"
   },
+  "browserslist": [
+    "last 1 version",
+    "> 1%",
+    "not dead"
+  ],
   "devDependencies": {
+    "rimraf": "^3.0.0",
+    "autoprefixer": "^9.7.1",
+    "sort-package-json": "^1.23.1",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.4",
     "husky": "^3.0.9",
     "lint-staged": "^9.4.2",
     "prettier": "^1.18.2",
+    "sass": "^1.23.3",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.15.0",
     "tslint-plugin-prettier": "^2.0.1",
