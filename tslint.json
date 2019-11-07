@@ -2,10 +2,13 @@
   "extends": [
     "tslint:latest",
     "tslint-react",
+    "tslint-react-hooks",
     "tslint-config-prettier",
     "tslint-plugin-prettier"
   ],
+  "rulesDirectory": ["tslint-no-focused-test"],
   "rules": {
-    "prettier": true
+    "prettier": true,
+    "react-hooks-nesting": "error"
   }
 }

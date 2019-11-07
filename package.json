@@ -6,8 +6,10 @@
   "scripts": {
     "build": "npm run clean && parcel build src/index.html --experimental-scope-hoisting",
     "clean": "rimraf dist .cache",
+    "test": "jest",
     "start": "parcel serve src/index.html --open --no-autoinstall",
-    "lint": "tslint -c tslint.json --fix 'src/**/*.{ts,tsx}'"
+    "lint": "tslint -c tslint.json --fix 'src/**/*.{ts,tsx}'",
+    "upgrade": "npm-check --update"
   },
   "repository": {
     "type": "git",
@@ -30,11 +32,11 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@material-ui/core": "^4.6.0",
-    "@material-ui/icons": "^4.5.1",
-    "parcel-bundler": "^1.12.4",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0"
+    "@material-ui/core": "4.6.0",
+    "@material-ui/icons": "4.5.1",
+    "parcel-bundler": "1.12.4",
+    "react": "16.11.0",
+    "react-dom": "16.11.0"
   },
   "browserslist": [
     "last 1 version",
@@ -42,19 +44,24 @@
     "not dead"
   ],
   "devDependencies": {
-    "rimraf": "^3.0.0",
-    "autoprefixer": "^9.7.1",
-    "sort-package-json": "^1.23.1",
-    "@types/react": "^16.9.11",
-    "@types/react-dom": "^16.9.4",
-    "husky": "^3.0.9",
-    "lint-staged": "^9.4.2",
-    "prettier": "^1.18.2",
-    "sass": "^1.23.3",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.15.0",
-    "tslint-plugin-prettier": "^2.0.1",
-    "tslint-react": "^4.1.0",
-    "typescript": "^3.7.2"
+    "rimraf": "3.0.0",
+    "jest": "",
+    "autoprefixer": "9.7.1",
+    "sort-package-json": "1.23.1",
+    "@types/react": "16.9.11",
+    "@types/react-dom": "16.9.4",
+    "husky": "3.0.9",
+    "lint-staged": "9.4.2",
+    "prettier": "1.18.2",
+    "sass": "1.23.3",
+    "tslint": "5.20.1",
+    "ts-jest": "24.1.0",
+    "npm-check": "5.9.0",
+    "tslint-config-prettier": "1.18.0",
+    "tslint-no-focused-test": "0.5.0",
+    "tslint-plugin-prettier": "2.0.1",
+    "tslint-react-hooks": "2.2.1",
+    "tslint-react": "4.1.0",
+    "typescript": "3.7.2"
   }
 }
