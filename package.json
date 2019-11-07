@@ -1,0 +1,46 @@
+{
+  "name": "gswitch-like",
+  "version": "0.1.0",
+  "description": "A little game to try out react-three-fiber",
+  "main": "src/index.tsx",
+  "scripts": {
+    "build": "parcel build src/index.html --experimental-scope-hoisting",
+    "start": "parcel serve src/index.html --open --no-autoinstall",
+    "lint": "tslint -c tslint.json --fix 'src/**/*.{ts,tsx}'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/age2pierre/gswitch-like.git"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "tslint --fix",
+      "git add"
+    ]
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@material-ui/core": "^4.6.0",
+    "@material-ui/icons": "^4.5.1",
+    "parcel-bundler": "^1.12.4",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.4",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.2",
+    "prettier": "^1.18.2",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "tslint-react": "^4.1.0",
+    "typescript": "^3.7.2"
+  }
+}
