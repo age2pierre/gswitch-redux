@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useState } from 'react'
-import { useFrame } from 'react-three-fiber'
+import React, { FunctionComponent } from 'react'
+import { useDynamic } from '../services/collisions'
 
 const Ball: FunctionComponent<{
   xInit: number
@@ -7,18 +7,21 @@ const Ball: FunctionComponent<{
   speedUnitPerSec?: number
   directionRadian?: number
 }> = ({ xInit, yInit, directionRadian = 0, speedUnitPerSec = 1 }) => {
-  const [[x, y], setPos] = useState([xInit, yInit])
-  useFrame((_, deltaSecond) => {
-    const distance = deltaSecond * speedUnitPerSec
-    const deltaX = Math.cos(directionRadian) * distance
-    const deltaY = Math.sin(directionRadian) * distance
-    setPos([x + deltaX, y + deltaY])
+  const { pos, isTouching } = useDynamic({
+    directionInit: directionRadian,
+    speedInit: speedUnitPerSec,
+    xInit,
+    yInit,
   })
-
+  const [x, y] = pos
+  console.log(`x ${x} y ${y}`)
   return (
     <mesh position={[x + 0.5, y + 0.5, 0]}>
       <sphereBufferGeometry attach="geometry" args={[0.5, 16, 10]} />
-      <meshStandardMaterial attach="material" color={'lime'} />
+      <meshStandardMaterial
+        attach="material"
+        color={isTouching ? 'lime' : 'cyan'}
+      />
     </mesh>
   )
 }
