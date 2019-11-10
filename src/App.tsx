@@ -2,6 +2,7 @@ import { CssBaseline, MuiThemeProvider } from '@material-ui/core'
 import React, { useReducer } from 'react'
 import { Canvas } from 'react-three-fiber'
 import * as THREE from 'three'
+import Ball from './components/Ball'
 import Block from './components/Block'
 import PlaneEditor from './components/PlaneEditor'
 import blockReducer from './services/blocks'
@@ -24,6 +25,7 @@ export default function App() {
       >
         <pointLight />
         <ambientLight />>
+        <Ball xInit={0} yInit={0} directionRadian={Math.PI / 4} />
         <PlaneEditor
           onClick={({ point: { x, y } }) =>
             dispatchBlockStore({ type: 'add_block', x, y })
