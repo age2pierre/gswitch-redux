@@ -1,4 +1,5 @@
 import { Collisions, Polygon } from 'detect-collisions'
+import { maxBy } from 'lodash-es'
 import React, {
   createContext,
   FunctionComponent,
@@ -7,7 +8,6 @@ import React, {
   useState,
 } from 'react'
 import { useFrame } from 'react-three-fiber'
-import { maxBy } from 'lodash-es'
 
 function notEmpty<T>(value: T | null | undefined): value is T {
   return value != null
