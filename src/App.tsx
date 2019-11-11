@@ -1,4 +1,10 @@
-import { CssBaseline, MuiThemeProvider } from '@material-ui/core'
+import {
+  AppBar,
+  CssBaseline,
+  MuiThemeProvider,
+  Toolbar,
+  Typography,
+} from '@material-ui/core'
 import React, { useReducer } from 'react'
 import { Canvas } from 'react-three-fiber'
 import * as THREE from 'three'
@@ -16,6 +22,14 @@ export default function App() {
 
   return (
     <>
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        <AppBar position="fixed">
+          <Toolbar>
+            <Typography variant="h6">GSwitch-like</Typography>
+          </Toolbar>
+        </AppBar>
+      </MuiThemeProvider>
       <Canvas
         camera={{ position: [0, 0, 10] }}
         onCreated={({ gl }) => {
@@ -47,9 +61,6 @@ export default function App() {
           ))}
         </CollisionsProvider>
       </Canvas>
-      <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-      </MuiThemeProvider>
     </>
   )
 }
