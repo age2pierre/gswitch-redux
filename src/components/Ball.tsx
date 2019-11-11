@@ -14,7 +14,6 @@ const Ball: FunctionComponent<{
     yInit,
   })
   const [x, y] = pos
-  console.log(`x ${x} y ${y}`)
   return (
     <mesh position={[x + 0.5, y + 0.5, 0]}>
       <sphereBufferGeometry attach="geometry" args={[0.5, 16, 10]} />

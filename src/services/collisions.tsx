@@ -7,8 +7,12 @@ import React, {
   useState,
 } from 'react'
 import { useFrame } from 'react-three-fiber'
+import { maxBy } from 'lodash-es'
 
-const SCALE_FACTOR = 10
+function notEmpty<T>(value: T | null | undefined): value is T {
+  return value != null
+}
+
 const context = createContext<Collisions>(new Collisions())
 
 export const CollisionsProvider: FunctionComponent<{}> = ({ children }) => {
@@ -22,11 +26,11 @@ export const useStatic = ({ x, y }: { x: number; y: number }) => {
   const [body, set] = useState<Polygon>()
   useEffect(() => {
     set(
-      system.createPolygon(x * SCALE_FACTOR, y * SCALE_FACTOR, [
-        [0.5 * SCALE_FACTOR, 0.5 * SCALE_FACTOR],
-        [0.5 * SCALE_FACTOR, -0.5 * SCALE_FACTOR],
-        [-0.5 * SCALE_FACTOR, -0.5 * SCALE_FACTOR],
-        [-0.5 * SCALE_FACTOR, 0.5 * SCALE_FACTOR],
+      system.createPolygon(x, y, [
+        [0.5, 0.5],
+        [0.5, -0.5],
+        [-0.5, -0.5],
+        [-0.5, 0.5],
       ]),
     )
     return () => {
@@ -50,21 +54,21 @@ export const useDynamic = ({
   directionInit: number
 }) => {
   const system = useContext(context)
-  const [body] = useState<Polygon>(
-    system.createPolygon(xInit * SCALE_FACTOR, yInit * SCALE_FACTOR, [
-      [0.5 * SCALE_FACTOR, 0.5 * SCALE_FACTOR],
-      [0.5 * SCALE_FACTOR, -0.5 * SCALE_FACTOR],
-      [-0.5 * SCALE_FACTOR, -0.5 * SCALE_FACTOR],
-      [-0.5 * SCALE_FACTOR, 0.5 * SCALE_FACTOR],
-    ]),
-  )
+  const [body, setBody] = useState<Polygon>()
   const [[speed, direction], setSpeedDirection] = useState([
     speedInit,
     directionInit,
   ])
-  const [[x, y], setPos] = useState([xInit, yInit])
-  const [isTouching, setTouching] = useState(false)
+  const [[x, y, touching], setState] = useState([xInit, yInit, false])
   useEffect(() => {
+    setBody(
+      system.createPolygon(xInit, yInit, [
+        [0.5, 0.5],
+        [0.5, -0.5],
+        [-0.5, -0.5],
+        [-0.5, 0.5],
+      ]),
+    )
     return () => {
       if (body) {
         body.remove()
@@ -73,37 +77,45 @@ export const useDynamic = ({
   }, [])
   useFrame((_, deltaSecond) => {
     // game logic
-    const distance = deltaSecond * speed * SCALE_FACTOR
+    const distance = deltaSecond * speed
     const deltaX = Math.cos(direction) * distance
     const deltaY = Math.sin(direction) * distance
-    body.x = x * SCALE_FACTOR + deltaX
-    body.y = y * SCALE_FACTOR + deltaY
+    if (!body) {
+      return
+    }
+    body.x = x + deltaX
+    body.y = y + deltaY
     // system update
     system.update()
     // handle collisions
     const potentials = body.potentials()
     const result = system.createResult()
-    const [xUpdated, yUpdated, touchingUpdated] = potentials.reduce(
-      ([curX, curY, touching], pot) => {
-        if (body.collides(pot, result)) {
-          return [
-            curX - result.overlap * result.overlap_x,
-            curY - result.overlap * result.overlap_y,
-            true,
-          ]
+    const overlaps = potentials
+      .map((potential) => {
+        if (body.collides(potential, result)) {
+          return {
+            xIsPos: result.overlap_x > 0,
+            yIsPos: result.overlap_y > 0,
+            x: Math.abs(result.overlap * result.overlap_x),
+            y: Math.abs(result.overlap * result.overlap_y),
+          }
         }
-        return [curX, curY, touching]
-      },
-      [x * SCALE_FACTOR + deltaX, y * SCALE_FACTOR + deltaY, false],
-    )
-    body.x = xUpdated
-    body.y = yUpdated
-    setPos([xUpdated / SCALE_FACTOR, yUpdated / SCALE_FACTOR])
-    setTouching(touchingUpdated)
+        return null
+      })
+      .filter(notEmpty)
+    const maxOverlapX = maxBy(overlaps, 'x')
+    const maxOverlapY = maxBy(overlaps, 'y')
+    if (maxOverlapX) {
+      body.x -= maxOverlapX.xIsPos ? maxOverlapX.x : -maxOverlapX.x
+    }
+    if (maxOverlapY) {
+      body.y -= maxOverlapY.yIsPos ? maxOverlapY.y : -maxOverlapY.y
+    }
+    setState([body.x, body.y, overlaps.length ? true : false])
   })
 
   return {
-    isTouching,
+    isTouching: touching,
     pos: [x, y],
     setSpeedDirection,
   }

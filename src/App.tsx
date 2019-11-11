@@ -27,7 +27,12 @@ export default function App() {
         <CollisionsProvider>
           <pointLight />
           <ambientLight />>
-          <Ball xInit={0} yInit={0} directionRadian={Math.PI / 4} />
+          <Ball
+            xInit={-5}
+            yInit={-5}
+            speedUnitPerSec={1}
+            directionRadian={Math.PI / 4}
+          />
           <PlaneEditor
             onClick={({ point: { x, y } }) =>
               dispatchBlockStore({ type: 'add_block', x, y })
