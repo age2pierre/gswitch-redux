@@ -8,9 +8,9 @@ import {
 import React, { useReducer } from 'react'
 import { Canvas } from 'react-three-fiber'
 import * as THREE from 'three'
-import Ball from './components/Ball'
 import Block from './components/Block'
 import PlaneEditor from './components/PlaneEditor'
+import Player from './components/Player'
 import blockReducer from './services/blocks'
 import { CollisionsProvider } from './services/collisions'
 import theme from './services/theme'
@@ -41,11 +41,11 @@ export default function App() {
         <CollisionsProvider>
           <pointLight />
           <ambientLight />>
-          <Ball
-            xInit={-5}
-            yInit={-5}
-            speedUnitPerSec={1}
-            directionRadian={Math.PI / 4}
+          <Player
+            xInit={0}
+            yInit={0}
+            speedInit={0}
+            directionInit={-Math.PI / 4}
           />
           <PlaneEditor
             onClick={({ point: { x, y } }) =>

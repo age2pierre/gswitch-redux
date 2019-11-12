@@ -42,7 +42,7 @@ export const useStatic = ({ x, y }: { x: number; y: number }) => {
   }, [])
 }
 
-export const useDynamic = ({
+export const useMovingAgent = ({
   xInit,
   yInit,
   speedInit,
@@ -63,10 +63,10 @@ export const useDynamic = ({
   useEffect(() => {
     setBody(
       system.createPolygon(xInit, yInit, [
-        [0.5, 0.5],
+        [0.5, 1],
         [0.5, -0.5],
         [-0.5, -0.5],
-        [-0.5, 0.5],
+        [-0.5, 1],
       ]),
     )
     return () => {
