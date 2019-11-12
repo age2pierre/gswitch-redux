@@ -1,33 +1,36 @@
 import { isEqual, uniqWith } from 'lodash-es'
+import create from 'zustand'
 
 export interface Block {
   x: number
   y: number
 }
 
-export interface BlockState {
+export interface BlockStore {
   items: Block[]
+  addBlock: (args: Block) => void
+  deleteBlock: (args: Block) => void
 }
 
-export type BlockAction =
-  | { type: 'add_block'; x: number; y: number }
-  | { type: 'delete_block'; x: number; y: number }
-
-export default function blockReducer(
-  state: BlockState,
-  action: BlockAction,
-): BlockState {
-  const { x, y } = action
-  switch (action.type) {
-    case 'add_block':
-      return {
+const [useStore, api] = create<BlockStore>((set) => {
+  const store: BlockStore = {
+    items: [],
+    addBlock({ x, y }: Block) {
+      set((state) => ({
         ...state,
         items: uniqWith<Block>([...state.items, { x, y }], isEqual),
-      }
-    case 'delete_block':
-      return {
+      }))
+    },
+    deleteBlock({ x, y }: Block) {
+      set((state) => ({
         ...state,
         items: state.items.filter((item) => x !== item.x && y !== item.y),
-      }
+      }))
+    },
   }
-}
+  return store
+})
+
+export default useStore
+
+export { useStore, api }

@@ -5,21 +5,19 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core'
-import React, { useReducer } from 'react'
+import React from 'react'
 import { Canvas } from 'react-three-fiber'
 import * as THREE from 'three'
 import Block from './components/Block'
 import PlaneEditor from './components/PlaneEditor'
 import Player from './components/Player'
-import blockReducer from './services/blocks'
+import useBlocksStore from './services/blocks'
 import { CollisionsProvider } from './services/collisions'
 import theme from './services/theme'
 
 export default function App() {
-  const [blocks, dispatchBlockStore] = useReducer(blockReducer, {
-    items: [],
-  })
-
+  const items = useBlocksStore((state) => state.items)
+  const addBlock = useBlocksStore((state) => state.addBlock)
   return (
     <>
       <MuiThemeProvider theme={theme}>
@@ -47,12 +45,8 @@ export default function App() {
             speedInit={0}
             directionInit={-Math.PI / 4}
           />
-          <PlaneEditor
-            onClick={({ point: { x, y } }) =>
-              dispatchBlockStore({ type: 'add_block', x, y })
-            }
-          />
-          {blocks.items.map(({ x, y }) => (
+          <PlaneEditor onClick={({ point: { x, y } }) => addBlock({ x, y })} />
+          {items.map(({ x, y }) => (
             <Block
               key={`${x}${y}`}
               x={Math.round(x - 0.5)}
