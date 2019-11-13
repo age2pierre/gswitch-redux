@@ -21,7 +21,7 @@ export const CollisionsProvider: FunctionComponent<{}> = ({ children }) => {
   return <context.Provider value={system} children={children} />
 }
 
-export const useStatic = ({ x, y }: { x: number; y: number }) => {
+export const useStaticHitbox = ({ x, y }: { x: number; y: number }) => {
   const system = useContext(context)
   const [body, set] = useState<Polygon>()
   useEffect(() => {
@@ -42,7 +42,7 @@ export const useStatic = ({ x, y }: { x: number; y: number }) => {
   }, [])
 }
 
-export const useMovingAgent = ({
+export const useAgentHitbox = ({
   xInit,
   yInit,
   speedInit,
@@ -91,7 +91,7 @@ export const useMovingAgent = ({
     const potentials = body.potentials()
     const result = system.createResult()
     const overlaps = potentials
-      .map((potential) => {
+      .map(potential => {
         if (body.collides(potential, result)) {
           return {
             xIsPos: result.overlap_x > 0,

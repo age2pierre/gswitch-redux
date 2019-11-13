@@ -12,25 +12,25 @@ export interface BlockStore {
   deleteBlock: (args: Block) => void
 }
 
-const [useStore, api] = create<BlockStore>((set) => {
+const [useBlocksStore, apiBlocksStore] = create<BlockStore>(set => {
   const store: BlockStore = {
     items: [],
-    addBlock({ x, y }: Block) {
-      set((state) => ({
+    addBlock({ x, y }) {
+      set(state => ({
         ...state,
         items: uniqWith<Block>([...state.items, { x, y }], isEqual),
       }))
     },
-    deleteBlock({ x, y }: Block) {
-      set((state) => ({
+    deleteBlock({ x, y }) {
+      set(state => ({
         ...state,
-        items: state.items.filter((item) => x !== item.x && y !== item.y),
+        items: state.items.filter(item => x !== item.x && y !== item.y),
       }))
     },
   }
   return store
 })
 
-export default useStore
+export default useBlocksStore
 
-export { useStore, api }
+export { useBlocksStore, apiBlocksStore }

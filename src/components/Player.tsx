@@ -1,15 +1,14 @@
 import React, { FunctionComponent } from 'react'
-import { useMovingAgent } from '../services/collisions'
+import { useAgentHitbox } from '../services/collisions'
 
 const Player: FunctionComponent<{
+  id: number
   xInit: number
   yInit: number
-  speedInit?: number
-  directionInit?: number
-}> = ({ xInit, yInit, directionInit = 0, speedInit = 1 }) => {
-  const { pos, isTouching } = useMovingAgent({
-    directionInit,
-    speedInit,
+}> = ({ xInit, yInit }) => {
+  const { pos, isTouching } = useAgentHitbox({
+    directionInit: -Math.PI / 4,
+    speedInit: 0,
     xInit,
     yInit,
   })
@@ -24,7 +23,7 @@ const Player: FunctionComponent<{
         />
       </mesh>
       <mesh position={[0.5, 0.5, 0]}>
-        <sphereBufferGeometry attach="geometry" args={[0.5, 16, 10]} />
+        <cylinderGeometry attach="geometry" args={[0.35, 0.5, 1, 16]} />
         <meshStandardMaterial attach="material" color={'cyan'} opacity={0.3} />
       </mesh>
     </group>

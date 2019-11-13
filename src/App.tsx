@@ -16,8 +16,8 @@ import { CollisionsProvider } from './services/collisions'
 import theme from './services/theme'
 
 export default function App() {
-  const items = useBlocksStore((state) => state.items)
-  const addBlock = useBlocksStore((state) => state.addBlock)
+  const items = useBlocksStore(state => state.items)
+  const addBlock = useBlocksStore(state => state.addBlock)
   return (
     <>
       <MuiThemeProvider theme={theme}>
@@ -39,12 +39,7 @@ export default function App() {
         <CollisionsProvider>
           <pointLight />
           <ambientLight />>
-          <Player
-            xInit={0}
-            yInit={0}
-            speedInit={0}
-            directionInit={-Math.PI / 4}
-          />
+          <Player id={0} xInit={0} yInit={0} />
           <PlaneEditor onClick={({ point: { x, y } }) => addBlock({ x, y })} />
           {items.map(({ x, y }) => (
             <Block
