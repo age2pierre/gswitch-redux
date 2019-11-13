@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react'
 import { useFrame } from 'react-three-fiber'
+import { PLAYER_HEIGHT, PLAYER_WIDTH } from './constants'
 
 function notEmpty<T>(value: T | null | undefined): value is T {
   return value != null
@@ -47,11 +48,15 @@ export const useAgentHitbox = ({
   yInit,
   speedInit,
   directionInit,
+  onStartTouch,
+  onEndTouch,
 }: {
   xInit: number
   yInit: number
   speedInit: number
   directionInit: number
+  onStartTouch: () => void
+  onEndTouch: () => void
 }) => {
   const system = useContext(context)
   const [body, setBody] = useState<Polygon>()
@@ -59,14 +64,21 @@ export const useAgentHitbox = ({
     speedInit,
     directionInit,
   ])
-  const [[x, y, touching], setState] = useState([xInit, yInit, false])
+  const [[x, y, touching, prevTouching], setState] = useState([
+    xInit,
+    yInit,
+    false,
+    false,
+  ])
   useEffect(() => {
+    const xOffset = -PLAYER_WIDTH / 2
+    const yOffset = -PLAYER_HEIGHT / 3
     setBody(
       system.createPolygon(xInit, yInit, [
-        [0.5, 1],
-        [0.5, -0.5],
-        [-0.5, -0.5],
-        [-0.5, 1],
+        [PLAYER_WIDTH / 2 + xOffset, PLAYER_HEIGHT / 2 + yOffset],
+        [PLAYER_WIDTH / 2 + xOffset, -PLAYER_HEIGHT / 2 + yOffset],
+        [-PLAYER_WIDTH / 2 + xOffset, -PLAYER_HEIGHT / 2 + yOffset],
+        [-PLAYER_WIDTH / 2 + xOffset, PLAYER_HEIGHT / 2 + yOffset],
       ]),
     )
     return () => {
@@ -111,12 +123,24 @@ export const useAgentHitbox = ({
     if (maxOverlapY) {
       body.y -= maxOverlapY.yIsPos ? maxOverlapY.y : -maxOverlapY.y
     }
-    setState([body.x, body.y, overlaps.length ? true : false])
+    setState([body.x, body.y, overlaps.length ? true : false, touching])
   })
+
+  useEffect(() => {
+    if (touching !== prevTouching) {
+      if (touching) {
+        onStartTouch()
+      } else {
+        onEndTouch()
+      }
+    }
+  }, [touching, prevTouching])
 
   return {
     isTouching: touching,
     pos: [x, y],
+    speed,
+    direction,
     setSpeedDirection,
   }
 }
