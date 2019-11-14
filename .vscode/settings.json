@@ -4,5 +4,6 @@
   "tslint.alwaysShowStatus": true,
   "tslint.autoFixOnSave": true,
   "tslint.enable": true,
-  "typescript.implementationsCodeLens.enabled": true
+  "typescript.implementationsCodeLens.enabled": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

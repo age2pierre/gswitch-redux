@@ -22,6 +22,11 @@ export const CollisionsProvider: FunctionComponent<{}> = ({ children }) => {
   return <context.Provider value={system} children={children} />
 }
 
+/**
+ * Hooks used to incarnate static physical agent into the collision engine; aka box of 1x1.
+ *
+ * Should be use inside `CollisionsProvider`
+ */
 export const useStaticHitbox = ({ x, y }: { x: number; y: number }) => {
   const system = useContext(context)
   const [body, set] = useState<Polygon>()
@@ -43,6 +48,11 @@ export const useStaticHitbox = ({ x, y }: { x: number; y: number }) => {
   }, [])
 }
 
+/**
+ * Hooks used for controlling player agent.
+ *
+ * Should be use inside `CollisionsProvider`
+ */
 export const useAgentHitbox = ({
   xInit,
   yInit,
@@ -58,20 +68,25 @@ export const useAgentHitbox = ({
   onStartTouch: () => void
   onEndTouch: () => void
 }) => {
+  // get the collisions system (engine) singleton from global context
   const system = useContext(context)
+  // state containing collision system bodies
   const [{ hitbox, topSensor, bottomSensor }, setBodies] = useState<{
     hitbox?: Polygon
     topSensor?: Polygon
     bottomSensor?: Polygon
   }>({})
+  // state containing input target speed [unit / sec] and direction [rad]
   const [[speed, direction], setSpeedDirection] = useState([
     speedInit,
     directionInit,
   ])
+  // state for storing output collision result & position
   const [
     [x, y, touching, prevTouching, touchingTop, touchingBot],
     setState,
   ] = useState([xInit, yInit, false, false, false, false])
+  // initialize bodies on mounting
   useEffect(() => {
     const xOffset = -PLAYER_WIDTH / 2
     const yOffset = -PLAYER_HEIGHT / 3
@@ -102,14 +117,17 @@ export const useAgentHitbox = ({
         [topLeftVertice[0] + sensorOffset, topLeftVertice[1] - sensorOffset],
       ]),
     })
+    // clean up
     return () => {
-      if (hitbox) {
-        hitbox.remove()
-      }
+      hitbox?.remove()
+      bottomSensor?.remove()
+      topSensor?.remove()
     }
   }, [])
+
+  // updates collisions result from system every frame
   useFrame((_, deltaSecond) => {
-    // game logic
+    // game logic - update bodies position according to target inputs
     const distance = deltaSecond * speed
     const deltaX = Math.cos(direction) * distance
     const deltaY = Math.sin(direction) * distance
@@ -122,9 +140,10 @@ export const useAgentHitbox = ({
     topSensor.y = y + deltaY
     bottomSensor.x = x + deltaX
     bottomSensor.y = y + deltaY
-    // system update
+    // update collision engine
+    // TODO move this to context, look at useFrame renderPriority parameter
     system.update()
-    // handle collisions
+    // find overlapping regions by how much and which direction
     const resultHitbox = system.createResult()
     const overlaps = hitbox
       .potentials()
@@ -141,8 +160,10 @@ export const useAgentHitbox = ({
         return null
       })
       .filter(notEmpty)
+    // when multiple collisions take only max in each axis
     const maxOverlapX = maxBy(overlaps, 'x')
     const maxOverlapY = maxBy(overlaps, 'y')
+    // find collisions collisions with sensors ("go-thoughs" bodies)
     const isTouchingTop = topSensor
       .potentials()
       .filter(b => b !== hitbox && b !== bottomSensor)
@@ -153,6 +174,7 @@ export const useAgentHitbox = ({
       .filter(b => b !== hitbox && b !== topSensor)
       .map(potential => bottomSensor.collides(potential))
       .includes(true)
+    // update bodies position in the collisions engine
     if (maxOverlapX) {
       const dX = maxOverlapX.xIsPos ? maxOverlapX.x : -maxOverlapX.x
       hitbox.x -= dX
@@ -165,6 +187,7 @@ export const useAgentHitbox = ({
       bottomSensor.y -= dY
       topSensor.y -= dY
     }
+    // and update output state result
     setState([
       hitbox.x,
       hitbox.y,
@@ -175,6 +198,7 @@ export const useAgentHitbox = ({
     ])
   })
 
+  // fire callback according to circular buffer
   useEffect(() => {
     if (touching !== prevTouching) {
       if (touching) {

@@ -13,12 +13,15 @@ const Player: FunctionComponent<{
   xInit: number
   yInit: number
 }> = ({ xInit, yInit }) => {
+  // local state storing gravity direction
   const [gravity, setGravity] = useState<'up' | 'down'>('down')
+  // local state storing character animation
   const [animation, setAnim] = useState<
     'idle' | 'running' | 'falling' | 'spinning'
   >('idle')
+  // get hooked on collision engine
   const {
-    pos,
+    pos: [x, y],
     isTouching,
     isTouchingBot,
     isTouchingTop,
@@ -39,6 +42,7 @@ const Player: FunctionComponent<{
       setAnim('running')
     },
   })
+  // on key pressed switch gravity direction only if feet are touching
   useKeyboard(Key.M, 'keydown', () => {
     if (
       (gravity === 'down' && isTouchingBot) ||
@@ -49,7 +53,6 @@ const Player: FunctionComponent<{
       setGravity(gravity === 'up' ? 'down' : 'up')
     }
   })
-  const [x, y] = pos
   return (
     <group
       position={[x, y, 0]}
