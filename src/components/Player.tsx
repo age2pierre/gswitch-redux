@@ -20,6 +20,8 @@ const Player: FunctionComponent<{
   const {
     pos,
     isTouching,
+    isTouchingBot,
+    isTouchingTop,
     setSpeedDirection,
     speed,
     direction,
@@ -38,13 +40,22 @@ const Player: FunctionComponent<{
     },
   })
   useKeyboard(Key.M, 'keydown', () => {
-    if (isTouching) {
+    if (
+      (gravity === 'down' && isTouchingBot) ||
+      (gravity === 'up' && isTouchingTop)
+    ) {
       setSpeedDirection([speed, -direction])
       setAnim('spinning')
       setGravity(gravity === 'up' ? 'down' : 'up')
     }
   })
   const [x, y] = pos
+  console.dir({
+    pos,
+    isTouching,
+    isTouchingBot,
+    isTouchingTop,
+  })
   return (
     <group
       position={[x, y, 0]}
