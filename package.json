@@ -37,7 +37,7 @@
     "not dead"
   ],
   "dependencies": {
-    "@material-ui/core": "4.6.0",
+    "@material-ui/core": "^4.6.1",
     "@material-ui/icons": "4.5.1",
     "detect-collisions": "2.4.4",
     "immer": "5.0.0",
@@ -45,13 +45,13 @@
     "parcel-bundler": "1.12.4",
     "react": "16.11.0",
     "react-dom": "16.11.0",
-    "react-three-fiber": "3.0.11",
+    "react-three-fiber": "^3.0.13",
     "three": "0.110.0",
     "ts-keycode-enum": "1.0.6",
     "zustand": "2.2.1"
   },
   "devDependencies": {
-    "@types/jest": "24.0.22",
+    "@types/jest": "^24.0.23",
     "@types/lodash-es": "4.17.3",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.4",
@@ -59,7 +59,7 @@
     "fbx2gltf": "^0.9.7",
     "husky": "3.0.9",
     "jest": "24.9.0",
-    "lint-staged": "9.4.2",
+    "lint-staged": "^9.4.3",
     "npm-check": "5.9.0",
     "prettier": "^1.19.1",
     "rimraf": "3.0.0",
