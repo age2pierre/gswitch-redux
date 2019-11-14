@@ -9,7 +9,6 @@ import React, {
 } from 'react'
 import { useFrame } from 'react-three-fiber'
 import { PLAYER_HEIGHT, PLAYER_WIDTH } from './constants'
-import { height } from '@material-ui/system'
 
 function notEmpty<T>(value: T | null | undefined): value is T {
   return value != null

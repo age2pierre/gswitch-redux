@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import { AddBox, Delete } from '@material-ui/icons'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Canvas } from 'react-three-fiber'
 import * as THREE from 'three'
 import Block from './components/Block'
@@ -17,6 +17,7 @@ import PlaneEditor from './components/PlaneEditor'
 import Player from './components/Player'
 import { CollisionsProvider } from './services/collisions'
 import useLevelStore from './services/level'
+import pickFunc from './services/pickFunc'
 import theme from './services/theme'
 
 const useStyle = makeStyles(() => ({
@@ -28,10 +29,9 @@ const useStyle = makeStyles(() => ({
 export default function App() {
   const classes = useStyle()
   const items = useLevelStore(state => state.items)
-  const addBlock = useLevelStore(state => state.addBlock)
-  const loadFromStorage = useLevelStore(state => state.loadFromStorage)
-  const saveToStorage = useLevelStore(state => state.saveToStorage)
-  const clear = useLevelStore(state => state.clear)
+  const { addBlock, clear, loadFromStorage, saveToStorage } = useLevelStore(
+    pickFunc,
+  )
   useEffect(() => {
     loadFromStorage()
     window.addEventListener('unload', () => saveToStorage())

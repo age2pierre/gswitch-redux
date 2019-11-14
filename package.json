@@ -48,6 +48,7 @@
     "react-three-fiber": "^3.0.13",
     "three": "0.110.0",
     "ts-keycode-enum": "1.0.6",
+    "utility-types": "3.10.0",
     "zustand": "2.2.1"
   },
   "devDependencies": {
