@@ -10,9 +10,12 @@ export interface BlockStore {
   items: Block[]
   addBlock: (args: Block) => void
   deleteBlock: (args: Block) => void
+  clear: () => void
+  loadFromStorage: (level?: string) => void
+  saveToStorage: (level?: string) => void
 }
 
-const [useBlocksStore, apiBlocksStore] = create<BlockStore>(set => {
+const [useBlocksStore, apiBlocksStore] = create<BlockStore>((set, get) => {
   const store: BlockStore = {
     items: [],
     addBlock({ x, y }) {
@@ -26,6 +29,29 @@ const [useBlocksStore, apiBlocksStore] = create<BlockStore>(set => {
         ...state,
         items: state.items.filter(item => x !== item.x && y !== item.y),
       }))
+    },
+    clear() {
+      set(state => ({
+        ...state,
+        items: [],
+      }))
+    },
+    loadFromStorage(level = 'default_level') {
+      const str = window.localStorage.getItem(level)
+      if (!str) {
+        return
+      }
+      const items = JSON.parse(str)
+      if (!items) {
+        return
+      }
+      set(state => ({
+        ...state,
+        items,
+      }))
+    },
+    saveToStorage(level = 'default_level') {
+      window.localStorage.setItem(level, JSON.stringify(get().items))
     },
   }
   return store

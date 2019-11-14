@@ -1,11 +1,15 @@
 import {
   AppBar,
+  Button,
   CssBaseline,
   MuiThemeProvider,
   Toolbar,
   Typography,
+  makeStyles,
+  ButtonGroup,
 } from '@material-ui/core'
-import React from 'react'
+import { AddBox, Delete } from '@material-ui/icons'
+import React, { useEffect, useState } from 'react'
 import { Canvas } from 'react-three-fiber'
 import * as THREE from 'three'
 import Block from './components/Block'
@@ -15,16 +19,48 @@ import useBlocksStore from './services/blocks'
 import { CollisionsProvider } from './services/collisions'
 import theme from './services/theme'
 
+const useStyle = makeStyles(() => ({
+  appBarItem: {
+    marginRight: theme.spacing(2),
+  },
+}))
+
 export default function App() {
+  const classes = useStyle()
   const items = useBlocksStore(state => state.items)
   const addBlock = useBlocksStore(state => state.addBlock)
+  const loadFromStorage = useBlocksStore(state => state.loadFromStorage)
+  const saveToStorage = useBlocksStore(state => state.saveToStorage)
+  const clear = useBlocksStore(state => state.clear)
+  const [selectedTool, setTool] = useState<'addBlock' | 'delBlock'>('addBlock')
+  useEffect(() => {
+    loadFromStorage()
+    window.addEventListener('unload', () => saveToStorage())
+  }, [])
   return (
     <>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         <AppBar position="fixed">
           <Toolbar>
-            <Typography variant="h6">GSwitch-like</Typography>
+            <Typography variant="h6" className={classes.appBarItem}>
+              GSwitch-like
+            </Typography>
+            <Button
+              variant="outlined"
+              onClick={clear}
+              className={classes.appBarItem}
+            >
+              Clear level
+            </Button>
+            <ButtonGroup>
+              <Button>
+                <AddBox color="secondary" />
+              </Button>
+              <Button>
+                <Delete />
+              </Button>
+            </ButtonGroup>
           </Toolbar>
         </AppBar>
       </MuiThemeProvider>
