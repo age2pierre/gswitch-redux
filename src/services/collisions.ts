@@ -10,16 +10,10 @@ import React, {
 import { useFrame } from 'react-three-fiber'
 import { PLAYER_HEIGHT, PLAYER_WIDTH } from './constants'
 
+export const context = createContext<Collisions>(new Collisions())
+
 function notEmpty<T>(value: T | null | undefined): value is T {
   return value != null
-}
-
-const context = createContext<Collisions>(new Collisions())
-
-export const CollisionsProvider: FunctionComponent<{}> = ({ children }) => {
-  const [system] = useState<Collisions>(() => new Collisions())
-  // useFrame(() => system.update())
-  return <context.Provider value={system} children={children} />
 }
 
 /**
