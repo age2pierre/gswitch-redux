@@ -6,7 +6,7 @@ export interface Block {
   y: number
 }
 
-export interface BlockStore {
+export interface LevelStore {
   items: Block[]
   addBlock: (args: Block) => void
   deleteBlock: (args: Block) => void
@@ -15,8 +15,8 @@ export interface BlockStore {
   saveToStorage: (level?: string) => void
 }
 
-const [useBlocksStore, apiBlocksStore] = create<BlockStore>((set, get) => {
-  const store: BlockStore = {
+const [useLevelStore, apiLevelStore] = create<LevelStore>((set, get) => {
+  const store: LevelStore = {
     items: [],
     addBlock({ x, y }) {
       set(state => ({
@@ -57,6 +57,6 @@ const [useBlocksStore, apiBlocksStore] = create<BlockStore>((set, get) => {
   return store
 })
 
-export default useBlocksStore
+export default useLevelStore
 
-export { useBlocksStore, apiBlocksStore }
+export { useLevelStore, apiLevelStore }
