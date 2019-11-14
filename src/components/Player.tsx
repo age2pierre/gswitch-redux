@@ -50,12 +50,6 @@ const Player: FunctionComponent<{
     }
   })
   const [x, y] = pos
-  console.dir({
-    pos,
-    isTouching,
-    isTouchingBot,
-    isTouchingTop,
-  })
   return (
     <group
       position={[x, y, 0]}

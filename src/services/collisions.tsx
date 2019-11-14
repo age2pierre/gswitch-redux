@@ -1,4 +1,4 @@
-import { Collisions, Polygon, Circle, Point } from 'detect-collisions'
+import { Collisions, Polygon } from 'detect-collisions'
 import { maxBy } from 'lodash-es'
 import React, {
   createContext,
@@ -60,10 +60,10 @@ export const useAgentHitbox = ({
   onEndTouch: () => void
 }) => {
   const system = useContext(context)
-  const [{ hitbox, topPoint, botPoint }, setBodies] = useState<{
+  const [{ hitbox, topSensor, bottomSensor }, setBodies] = useState<{
     hitbox?: Polygon
-    topPoint?: Point
-    botPoint?: Point
+    topSensor?: Polygon
+    bottomSensor?: Polygon
   }>({})
   const [[speed, direction], setSpeedDirection] = useState([
     speedInit,
@@ -76,21 +76,32 @@ export const useAgentHitbox = ({
   useEffect(() => {
     const xOffset = -PLAYER_WIDTH / 2
     const yOffset = -PLAYER_HEIGHT / 3
+    const sensorOffset = 0.1
+    const [topRightVertex, botRightVertex, botLeftVertice, topLeftVertice] = [
+      [PLAYER_WIDTH / 2 + xOffset, PLAYER_HEIGHT / 2 + yOffset],
+      [PLAYER_WIDTH / 2 + xOffset, -PLAYER_HEIGHT / 2 + yOffset],
+      [-PLAYER_WIDTH / 2 + xOffset, -PLAYER_HEIGHT / 2 + yOffset],
+      [-PLAYER_WIDTH / 2 + xOffset, PLAYER_HEIGHT / 2 + yOffset],
+    ]
     setBodies({
       hitbox: system.createPolygon(xInit, yInit, [
-        [PLAYER_WIDTH / 2 + xOffset, PLAYER_HEIGHT / 2 + yOffset],
-        [PLAYER_WIDTH / 2 + xOffset, -PLAYER_HEIGHT / 2 + yOffset],
-        [-PLAYER_WIDTH / 2 + xOffset, -PLAYER_HEIGHT / 2 + yOffset],
-        [-PLAYER_WIDTH / 2 + xOffset, PLAYER_HEIGHT / 2 + yOffset],
+        topRightVertex,
+        botRightVertex,
+        botLeftVertice,
+        topLeftVertice,
       ]),
-      botPoint: system.createPoint(
-        xInit + xOffset,
-        yInit - PLAYER_HEIGHT / 2 - 0.1 + yOffset,
-      ),
-      topPoint: system.createPoint(
-        xInit + xOffset,
-        yInit + PLAYER_HEIGHT / 2 + 0.1 + yOffset,
-      ),
+      bottomSensor: system.createPolygon(xInit, yInit, [
+        [botRightVertex[0] - sensorOffset, botRightVertex[1] + sensorOffset],
+        [botRightVertex[0] - sensorOffset, botRightVertex[1] - sensorOffset],
+        [botLeftVertice[0] + sensorOffset, botLeftVertice[1] + sensorOffset],
+        [botLeftVertice[0] + sensorOffset, botLeftVertice[1] - sensorOffset],
+      ]),
+      topSensor: system.createPolygon(xInit, yInit, [
+        [topRightVertex[0] - sensorOffset, topRightVertex[1] + sensorOffset],
+        [topRightVertex[0] - sensorOffset, topRightVertex[1] - sensorOffset],
+        [topLeftVertice[0] + sensorOffset, topLeftVertice[1] + sensorOffset],
+        [topLeftVertice[0] + sensorOffset, topLeftVertice[1] - sensorOffset],
+      ]),
     })
     return () => {
       if (hitbox) {
@@ -103,18 +114,22 @@ export const useAgentHitbox = ({
     const distance = deltaSecond * speed
     const deltaX = Math.cos(direction) * distance
     const deltaY = Math.sin(direction) * distance
-    if (!hitbox || !botPoint || !topPoint) {
+    if (!hitbox || !bottomSensor || !topSensor) {
       return
     }
     hitbox.x = x + deltaX
     hitbox.y = y + deltaY
+    topSensor.x = x + deltaX
+    topSensor.y = y + deltaY
+    bottomSensor.x = x + deltaX
+    bottomSensor.y = y + deltaY
     // system update
     system.update()
     // handle collisions
-    const potentials = hitbox.potentials()
     const resultHitbox = system.createResult()
-    const overlaps = potentials
-      .filter(b => b !== botPoint && b !== topPoint)
+    const overlaps = hitbox
+      .potentials()
+      .filter(b => b !== bottomSensor && b !== topSensor)
       .map(potential => {
         if (hitbox.collides(potential, resultHitbox)) {
           return {
@@ -122,8 +137,6 @@ export const useAgentHitbox = ({
             yIsPos: resultHitbox.overlap_y > 0,
             x: Math.abs(resultHitbox.overlap * resultHitbox.overlap_x),
             y: Math.abs(resultHitbox.overlap * resultHitbox.overlap_y),
-            touchingBot: botPoint.collides(potential),
-            touchingTop: topPoint.collides(potential),
           }
         }
         return null
@@ -131,19 +144,27 @@ export const useAgentHitbox = ({
       .filter(notEmpty)
     const maxOverlapX = maxBy(overlaps, 'x')
     const maxOverlapY = maxBy(overlaps, 'y')
-    const isTouchingTop = overlaps.some(o => o.touchingTop)
-    const isTouchingBot = overlaps.some(o => o.touchingBot)
+    const isTouchingTop = topSensor
+      .potentials()
+      .filter(b => b !== hitbox && b !== bottomSensor)
+      .map(potential => topSensor.collides(potential))
+      .includes(true)
+    const isTouchingBot = bottomSensor
+      .potentials()
+      .filter(b => b !== hitbox && b !== topSensor)
+      .map(potential => bottomSensor.collides(potential))
+      .includes(true)
     if (maxOverlapX) {
       const dX = maxOverlapX.xIsPos ? maxOverlapX.x : -maxOverlapX.x
       hitbox.x -= dX
-      botPoint.x -= dX
-      topPoint.x -= dX
+      bottomSensor.x -= dX
+      topSensor.x -= dX
     }
     if (maxOverlapY) {
       const dY = maxOverlapY.yIsPos ? maxOverlapY.y : -maxOverlapY.y
       hitbox.y -= dY
-      botPoint.y -= dY
-      topPoint.y -= dY
+      bottomSensor.y -= dY
+      topSensor.y -= dY
     }
     setState([
       hitbox.x,
