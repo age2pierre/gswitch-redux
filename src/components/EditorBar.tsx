@@ -1,53 +1,62 @@
+// import {
+//   AppBar,
+//   Button,
+//   ButtonGroup,
+//   CssBaseline,
+//   makeStyles,
+//   MuiThemeProvider,
+//   Toolbar,
+//   Typography,
+// } from '@material-ui/core'
 import {
-  AppBar,
   Button,
   ButtonGroup,
-  CssBaseline,
-  makeStyles,
-  MuiThemeProvider,
-  Toolbar,
-  Typography,
-} from '@material-ui/core'
-import { AddBox, Delete } from '@material-ui/icons'
+  Classes,
+  Navbar,
+  NavbarDivider,
+  NavbarGroup,
+  NavbarHeading,
+} from '@blueprintjs/core'
 import React, { FunctionComponent } from 'react'
-import theme from '../services/theme'
+import useEditorStore from '../services/editor'
+import pickFunc from '../services/pickFunc'
 
-const useStyle = makeStyles(() => ({
-  appBarItem: {
-    marginRight: theme.spacing(2),
-  },
-}))
-
-const EditorBar: FunctionComponent<{
+export const EditorBar: FunctionComponent<{
   onClear: () => void
 }> = props => {
-  const classes = useStyle()
+  const tool = useEditorStore(state => state.tool)
+  const editorEnabled = useEditorStore(state => state.enabled)
+  const { setTool, switchMode } = useEditorStore(pickFunc)
   return (
-    <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      <AppBar position="fixed">
-        <Toolbar>
-          <Typography variant="h6" className={classes.appBarItem}>
-            GSwitch-like
-          </Typography>
+    <Navbar fixedToTop={true} className={Classes.DARK}>
+      <NavbarGroup>
+        <NavbarHeading>GSwitcher</NavbarHeading>
+        <NavbarDivider />
+        <Button
+          icon={editorEnabled ? 'play' : 'wrench'}
+          intent={editorEnabled ? 'success' : 'primary'}
+          onClick={switchMode}
+        />
+        <Button
+          className="m-l-md"
+          onClick={props.onClear}
+          icon="clean"
+          text="Clean level"
+        />
+        <ButtonGroup className="m-l-md">
           <Button
-            variant="outlined"
-            onClick={props.onClear}
-            className={classes.appBarItem}
-          >
-            Clear level
-          </Button>
-          <ButtonGroup>
-            <Button>
-              <AddBox color="secondary" />
-            </Button>
-            <Button>
-              <Delete />
-            </Button>
-          </ButtonGroup>
-        </Toolbar>
-      </AppBar>
-    </MuiThemeProvider>
+            icon="eraser"
+            onClick={() => setTool('eraser')}
+            active={tool === 'eraser'}
+          />
+          <Button
+            icon="edit"
+            onClick={() => setTool('pencil')}
+            active={tool === 'pencil'}
+          />
+        </ButtonGroup>
+      </NavbarGroup>
+    </Navbar>
   )
 }
 
