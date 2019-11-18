@@ -12,3 +12,5 @@ export const PLAYER_PARAMS = {
 
 export const PLAYER_WIDTH = 1
 export const PLAYER_HEIGHT = 1.5
+
+export const LEVEL_LENGTH = 50

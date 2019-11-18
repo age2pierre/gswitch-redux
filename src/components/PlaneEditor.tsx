@@ -4,7 +4,7 @@ import { PointerEvent } from 'react-three-fiber'
 const PlaneEditor: FunctionComponent<{
   onClick: (e: PointerEvent) => void
   gridSize?: number
-}> = ({ onClick, gridSize = 100 }) => {
+}> = ({ onClick, gridSize = 200 }) => {
   const ref = useRef()
 
   return (

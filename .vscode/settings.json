@@ -1,5 +1,8 @@
 {
   "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
   "files.autoSave": "onFocusChange",
   "tslint.alwaysShowStatus": true,
   "tslint.autoFixOnSave": true,

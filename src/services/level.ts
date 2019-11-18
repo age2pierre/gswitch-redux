@@ -27,7 +27,7 @@ const [useLevelStore, apiLevelStore] = create<LevelStore>((set, get) => {
     deleteBlock({ x, y }) {
       set(state => ({
         ...state,
-        items: state.items.filter(item => x !== item.x && y !== item.y),
+        items: state.items.filter(item => !(item.x === x && item.y === y)),
       }))
     },
     clear() {
