@@ -44,6 +44,7 @@
     "parcel-bundler": "1.12.4",
     "react": "16.11.0",
     "react-dom": "16.11.0",
+    "react-spring": "8.0.27",
     "react-three-fiber": "3.0.13",
     "three": "0.110.0",
     "ts-keycode-enum": "1.0.6",
