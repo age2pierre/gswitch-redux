@@ -11,7 +11,7 @@ const PlaneEditor: FunctionComponent<{
     <group>
       <mesh ref={ref} onClick={onClick}>
         <planeGeometry attach="geometry" args={[gridSize, gridSize]} />
-        <meshStandardMaterial attach="material" opacity={0} />
+        <meshStandardMaterial attach="material" opacity={0.1} alphaTest={0.5} />
       </mesh>
       <gridHelper
         args={[gridSize, gridSize, 0x880000]}

@@ -1,18 +1,16 @@
 import React, { FunctionComponent, useState } from 'react'
-import { Key } from 'ts-keycode-enum'
 import { useAgentHitbox } from '../services/collisions'
 import {
-  ANIM_TO_COLORS,
-  PLAYER_HEIGHT,
-  PLAYER_WIDTH,
+  PLAYER_ANGLE,
+  PLAYER_KEYMAP,
+  PLAYER_STARTING_POINTS,
 } from '../services/constants'
 import useKeyboard from '../services/keyboard'
+import Dummy from './Dummy'
 
 const Player: FunctionComponent<{
   id: number
-  xInit: number
-  yInit: number
-}> = ({ xInit, yInit }) => {
+}> = ({ id }) => {
   // local state storing gravity direction
   const [gravity, setGravity] = useState<'up' | 'down'>('down')
   // local state storing character animation
@@ -22,17 +20,16 @@ const Player: FunctionComponent<{
   // get hooked on collision engine
   const {
     pos: [x, y],
-    isTouching,
     isTouchingBot,
     isTouchingTop,
     setSpeedDirection,
     speed,
     direction,
   } = useAgentHitbox({
-    directionInit: -Math.PI / 4,
+    directionInit: -PLAYER_ANGLE,
     speedInit: 1,
-    xInit,
-    yInit,
+    xInit: PLAYER_STARTING_POINTS[id][0],
+    yInit: PLAYER_STARTING_POINTS[id][1],
     onEndTouch: () => {
       if (animation !== 'spinning') {
         setAnim('falling')
@@ -43,7 +40,7 @@ const Player: FunctionComponent<{
     },
   })
   // on key pressed switch gravity direction only if feet are touching
-  useKeyboard(Key.M, 'keydown', () => {
+  useKeyboard(PLAYER_KEYMAP[id], 'keydown', () => {
     if (
       (gravity === 'down' && isTouchingBot) ||
       (gravity === 'up' && isTouchingTop)
@@ -53,39 +50,13 @@ const Player: FunctionComponent<{
       setGravity(gravity === 'up' ? 'down' : 'up')
     }
   })
-  return (
-    <group
-      position={[x, y, 0]}
-      rotation={[0, 0, gravity === 'up' ? Math.PI : 0]}
-    >
-      <mesh position={[0, PLAYER_HEIGHT / 2 - PLAYER_WIDTH / 2, 0]}>
-        <sphereBufferGeometry
-          attach="geometry"
-          args={[PLAYER_WIDTH / 2, 16, 10]}
-        />
-        <meshStandardMaterial
-          attach="material"
-          color={ANIM_TO_COLORS[animation]}
-        />
-      </mesh>
-      <mesh position={[0, -PLAYER_HEIGHT / 6, 0]}>
-        <cylinderGeometry
-          attach="geometry"
-          args={[
-            0.7 * (PLAYER_WIDTH / 2),
-            PLAYER_WIDTH / 2,
-            (PLAYER_HEIGHT * 2) / 3,
-            16,
-          ]}
-        />
-        <meshStandardMaterial
-          attach="material"
-          color={isTouching ? 'lime' : 'cyan'}
-          opacity={0.3}
-        />
-      </mesh>
-    </group>
-  )
+  const props = {
+    gravity,
+    animation,
+    x,
+    y,
+  } as const
+  return <Dummy {...props} />
 }
 
 export default Player

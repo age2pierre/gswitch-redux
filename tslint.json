@@ -3,8 +3,7 @@
     "tslint:recommended",
     "tslint-react",
     "tslint-react-hooks",
-    "tslint-config-prettier",
-    "tslint-plugin-prettier"
+    "tslint-config-prettier"
   ],
   "rulesDirectory": ["tslint-no-focused-test"],
   "rules": {
