@@ -47,7 +47,7 @@ export default function Editor() {
         camera={{ position: [0, 0, 23], fov: 35 }}
       >
         <a.scene {...cameraProps}>
-          <pointLight />
+          <pointLight position={[5, 5, 5]} />
           <ambientLight />
           <PlaneEditor
             onClick={({ point }) => {
@@ -80,7 +80,7 @@ export default function Editor() {
             />
           ))}
           {items.map(({ x, y }) => (
-            <Block key={`${x}${y}`} x={x} y={y} />
+            <Block key={`block_${x}_${y}`} x={x} y={y} />
           ))}
         </a.scene>
       </Canvas>

@@ -30,7 +30,7 @@ export default function Game() {
       camera={{ position: [0, 0, 23], fov: 35 }}
     >
       <a.scene {...cameraProps}>
-        <pointLight />
+        <pointLight position={[0, 0, 5]} />
         <ambientLight />
         <CollisionsProvider>
           {PLAYER_ID.map(id => (
