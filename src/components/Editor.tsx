@@ -7,6 +7,7 @@ import useEditorStore from '../services/editor'
 import useLevelStore from '../services/level'
 import pickFunc from '../services/pickFunc'
 import Block from './Block'
+import Camera from './Camera'
 import Dummy from './Dummy'
 import EditorBar from './EditorBar'
 import PlaneEditor from './PlaneEditor'
@@ -32,7 +33,7 @@ export default function Editor() {
   }))
   useEffect(() => {
     setCamera({
-      position: [-sliderScroll * LEVEL_LENGTH, 0, 0],
+      position: [sliderScroll * LEVEL_LENGTH, 0, 0],
     } as any)
   }, [sliderScroll])
   return (
@@ -46,43 +47,30 @@ export default function Editor() {
         }}
         camera={{ position: [0, 0, 23], fov: 35 }}
       >
-        <a.scene {...cameraProps}>
-          <pointLight position={[5, 5, 5]} />
-          <ambientLight />
-          <PlaneEditor
-            onClick={({ point }) => {
-              const [x, y] = [
-                Math.round(
-                  point.x -
-                    (cameraProps.position as any).payload[0].value -
-                    0.5,
-                ),
-                Math.round(
-                  point.y -
-                    (cameraProps.position as any).payload[1].value -
-                    0.5,
-                ),
-              ]
-              if (tool === 'pencil') {
-                addBlock({ x, y })
-              } else if (tool === 'eraser') {
-                deleteBlock({ x, y })
-              }
-            }}
-          />
-          {PLAYER_STARTING_POINTS.map(([x, y], index) => (
-            <Dummy
-              key={index}
-              x={x}
-              y={y}
-              animation={'idle'}
-              gravity={'down'}
-            />
-          ))}
-          {items.map(({ x, y }) => (
-            <Block key={`block_${x}_${y}`} x={x} y={y} />
-          ))}
-        </a.scene>
+        <a.group {...cameraProps}>
+          <Camera />
+        </a.group>
+        <pointLight position={[5, 5, 5]} />
+        <ambientLight />
+        <PlaneEditor
+          onClick={({ point }) => {
+            const [x, y] = [
+              Math.round(point.x - 0.5),
+              Math.round(point.y - 0.5),
+            ]
+            if (tool === 'pencil') {
+              addBlock({ x, y })
+            } else if (tool === 'eraser') {
+              deleteBlock({ x, y })
+            }
+          }}
+        />
+        {PLAYER_STARTING_POINTS.map(([x, y], index) => (
+          <Dummy key={index} x={x} y={y} animation={'idle'} gravity={'down'} />
+        ))}
+        {items.map(({ x, y }) => (
+          <Block key={`block_${x}_${y}`} x={x} y={y} />
+        ))}
       </Canvas>
     </>
   )

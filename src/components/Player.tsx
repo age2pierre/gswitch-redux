@@ -3,6 +3,7 @@ import { useAgentHitbox } from '../services/collisions'
 import {
   PLAYER_ANGLE,
   PLAYER_KEYMAP,
+  PLAYER_SPEED,
   PLAYER_STARTING_POINTS,
 } from '../services/constants'
 import useKeyboard from '../services/keyboard'
@@ -27,7 +28,7 @@ const Player: FunctionComponent<{
     direction,
   } = useAgentHitbox({
     directionInit: -PLAYER_ANGLE,
-    speedInit: 1,
+    speedInit: PLAYER_SPEED,
     xInit: PLAYER_STARTING_POINTS[id][0],
     yInit: PLAYER_STARTING_POINTS[id][1],
     onEndTouch: () => {
