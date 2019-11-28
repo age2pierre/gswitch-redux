@@ -1,7 +1,6 @@
 import React, { FunctionComponent, Suspense } from 'react'
-import { useLoader } from 'react-three-fiber'
 import { MeshStandardMaterial } from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { resource } from '../services/cachedRessource'
 import { useStaticHitbox } from '../services/collisions'
 
 const Asset: FunctionComponent<{
@@ -9,7 +8,7 @@ const Asset: FunctionComponent<{
   x: number
   y: number
 }> = ({ url, x, y }) => {
-  const gltf = useLoader(GLTFLoader, url)
+  const gltf = resource.read(url)
   return (
     <mesh
       castShadow={false}
@@ -18,10 +17,10 @@ const Asset: FunctionComponent<{
       scale={[0.02, 0.02, 0.02]}
       position={[x + 0.5, y, 0]}
     >
-      <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
+      <bufferGeometry attach="geometry" {...gltf?.__$[1].geometry} />
       <meshStandardMaterial
         attach="material"
-        {...(gltf.__$[1].material as MeshStandardMaterial)}
+        {...(gltf?.__$[1].material as MeshStandardMaterial)}
       />
     </mesh>
   )
