@@ -2,7 +2,7 @@ import { Collisions, Polygon } from 'detect-collisions'
 import { maxBy } from 'lodash-es'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useFrame } from 'react-three-fiber'
-import { PLAYER_HEIGHT, PLAYER_WIDTH } from './constants'
+import { PLAYER_HEIGHT, PLAYER_PADDING, PLAYER_WIDTH } from './constants'
 
 export const context = createContext<Collisions>(new Collisions())
 
@@ -86,12 +86,12 @@ export const useAgentHitbox = ({
       [-PLAYER_WIDTH / 2 + xOffset, PLAYER_HEIGHT / 2 + yOffset],
     ]
     setBodies({
-      hitbox: system.createPolygon(xInit, yInit, [
-        topRightVertex,
-        botRightVertex,
-        botLeftVertice,
-        topLeftVertice,
-      ]),
+      hitbox: system.createPolygon(
+        xInit,
+        yInit,
+        [topRightVertex, botRightVertex, botLeftVertice, topLeftVertice],
+        PLAYER_PADDING,
+      ),
       bottomSensor: system.createPolygon(xInit, yInit, [
         [botRightVertex[0] - sensorOffset, botRightVertex[1] + sensorOffset],
         [botRightVertex[0] - sensorOffset, botRightVertex[1] - sensorOffset],

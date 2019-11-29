@@ -16,7 +16,7 @@ export default function Game() {
   useEffect(() => {
     loadFromStorage()
   }, [])
-  const [cameraProps, setCamera] = useSpring(() => ({
+  const [cameraProps] = useSpring(() => ({
     position: [0, 0, 0] as any,
     config: { tension: 200, friction: 40 },
   }))

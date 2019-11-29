@@ -27,7 +27,8 @@ export const PLAYER_KEYMAP = [
 ] as const
 
 export const PLAYER_WIDTH = 1
-export const PLAYER_HEIGHT = 1.4
+export const PLAYER_PADDING = 0.05
+export const PLAYER_HEIGHT = 1.5 - 2 * PLAYER_PADDING
 export const PLAYER_ANGLE = Math.PI / 4
 
 export const LEVEL_LENGTH = 50
