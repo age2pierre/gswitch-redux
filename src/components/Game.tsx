@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import useLevelStore from '../services/level'
 import pickFunc from '../services/pickFunc'
 import Block from './Block'
+import Camera from './Camera'
 import CollisionsProvider from './CollisionProvider'
 import Player from './Player'
 
@@ -27,20 +28,20 @@ export default function Game() {
         gl.gammaOutput = true
         gl.toneMapping = THREE.Uncharted2ToneMapping
       }}
-      camera={{ position: [0, 0, 23], fov: 35 }}
     >
-      <a.scene {...cameraProps}>
+      <a.group {...cameraProps}>
+        <Camera />
         <pointLight position={[0, 0, 5]} />
-        <ambientLight />
-        <CollisionsProvider>
-          {PLAYER_ID.map(id => (
-            <Player key={id} id={id} />
-          ))}
-          {items.map(({ x, y }) => (
-            <Block key={`${x}${y}`} x={x} y={y} />
-          ))}
-        </CollisionsProvider>
-      </a.scene>
+      </a.group>
+      <ambientLight />
+      <CollisionsProvider>
+        {PLAYER_ID.map(id => (
+          <Player key={id} id={id} />
+        ))}
+        {items.map(({ x, y }) => (
+          <Block key={`${x}${y}`} x={x} y={y} />
+        ))}
+      </CollisionsProvider>
     </Canvas>
   )
 }

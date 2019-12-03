@@ -45,7 +45,6 @@ export default function Editor() {
           gl.gammaOutput = true
           gl.toneMapping = THREE.Uncharted2ToneMapping
         }}
-        camera={{ position: [0, 0, 23], fov: 35 }}
       >
         <a.group {...cameraProps}>
           <Camera />

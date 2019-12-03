@@ -77,7 +77,7 @@ export const useAgentHitbox = ({
   // initialize bodies on mounting
   useEffect(() => {
     const xOffset = -PLAYER_WIDTH / 2
-    const yOffset = -PLAYER_HEIGHT / 3
+    const yOffset = xOffset
     const sensorOffset = 0.1
     const [topRightVertex, botRightVertex, botLeftVertice, topLeftVertice] = [
       [PLAYER_WIDTH / 2 + xOffset, PLAYER_HEIGHT / 2 + yOffset],

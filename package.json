@@ -1,5 +1,5 @@
 {
-  "name": "gswitch-like",
+  "name": "gswitch-redux",
   "version": "0.1.0",
   "description": "A little game to try out react-three-fiber",
   "repository": {
