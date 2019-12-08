@@ -1,11 +1,8 @@
 import React, { FunctionComponent, useState } from 'react'
+import pickFunc from '~services/pickFunc'
+import useRaceStore from '~services/race'
 import { useAgentHitbox } from '../services/collisions'
-import {
-  PLAYER_ANGLE,
-  PLAYER_KEYMAP,
-  PLAYER_SPEED,
-  PLAYER_STARTING_POINTS,
-} from '../services/constants'
+import * as cst from '../services/constants'
 import useKeyboard from '../services/keyboard'
 import Dummy from './Dummy'
 
@@ -27,10 +24,10 @@ const Player: FunctionComponent<{
     speed,
     direction,
   } = useAgentHitbox({
-    directionInit: -PLAYER_ANGLE,
-    speedInit: PLAYER_SPEED,
-    xInit: PLAYER_STARTING_POINTS[id][0],
-    yInit: PLAYER_STARTING_POINTS[id][1],
+    directionInit: -cst.PLAYER_ANGLE,
+    speedInit: cst.PLAYER_SPEED,
+    xInit: cst.PLAYER_STARTING_POINTS[id][0],
+    yInit: cst.PLAYER_STARTING_POINTS[id][1],
     onEndTouch: () => {
       if (animation !== 'spinning') {
         setAnim('falling')
@@ -41,7 +38,7 @@ const Player: FunctionComponent<{
     },
   })
   // on key pressed switch gravity direction only if feet are touching
-  useKeyboard(PLAYER_KEYMAP[id], 'keydown', () => {
+  useKeyboard(cst.PLAYER_KEYMAP[id], 'keydown', () => {
     if (
       (gravity === 'down' && isTouchingBot) ||
       (gravity === 'up' && isTouchingTop)
@@ -51,6 +48,19 @@ const Player: FunctionComponent<{
       setGravity(gravity === 'up' ? 'down' : 'up')
     }
   })
+  const { playersEndsMatch } = useRaceStore(pickFunc)
+  const cameraScroll = useRaceStore(state => state.cameraScroll)
+  const isRacing = useRaceStore(state => !state.players[id].finishedRace)
+  if (
+    isRacing &&
+    (y > cst.BORDER_TOP ||
+      y < cst.BORDER_DOWN ||
+      x > cst.LEVEL_LENGTH ||
+      x < cameraScroll - cst.BORDER_LEFT)
+  ) {
+    playersEndsMatch(id, x / cst.LEVEL_LENGTH)
+  }
+
   const props = {
     gravity,
     animation,
