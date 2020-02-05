@@ -1,8 +1,8 @@
-import React, { FunctionComponent, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useFrame, useThree } from 'react-three-fiber'
 import { PerspectiveCamera } from 'three'
 
-const Camera: FunctionComponent<{}> = () => {
+export const Camera: React.FC<{}> = () => {
   const camera = useRef<PerspectiveCamera>()
   const { size, setDefaultCamera } = useThree()
   useEffect(() => {
@@ -25,5 +25,3 @@ const Camera: FunctionComponent<{}> = () => {
     />
   )
 }
-
-export default Camera

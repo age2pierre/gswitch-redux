@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react'
 import { a, useSpring } from 'react-spring/three'
 import { Canvas } from 'react-three-fiber'
-import * as THREE from 'three'
+import { GammaEncoding, Uncharted2ToneMapping } from 'three'
 import { LEVEL_LENGTH, PLAYER_STARTING_POINTS } from '../services/constants'
-import useEditorStore from '../services/editor'
-import useLevelStore from '../services/level'
-import pickFunc from '../services/pickFunc'
-import Block from './Block'
-import Camera from './Camera'
-import Dummy from './Dummy'
-import EditorBar from './EditorBar'
-import PlaneEditor from './PlaneEditor'
+import { useEditorStore } from '../services/editor'
+import { useLevelStore } from '../services/level'
+import { pickFunc } from '../services/pickFunc'
+import { Block } from './Block'
+import { Camera } from './Camera'
+import { Dummy } from './Dummy'
+import { EditorBar } from './EditorBar'
+import { PlaneEditor } from './PlaneEditor'
 
-export default function Editor() {
+export const Editor = () => {
   const items = useLevelStore(state => state.items)
   const {
     addBlock,
@@ -23,7 +23,7 @@ export default function Editor() {
   } = useLevelStore(pickFunc)
   useEffect(() => {
     loadFromStorage()
-    window.addEventListener('unload', () => saveToStorage())
+    window.addEventListener('unload', () => saveToStorage(undefined))
   }, [])
   const tool = useEditorStore(state => state.tool)
   const sliderScroll = useEditorStore(state => state.cameraScroll)
@@ -41,9 +41,8 @@ export default function Editor() {
       <EditorBar onCleanLevel={clear} />
       <Canvas
         onCreated={({ gl }) => {
-          gl.gammaInput = true
-          gl.gammaOutput = true
-          gl.toneMapping = THREE.Uncharted2ToneMapping
+          gl.outputEncoding = GammaEncoding
+          gl.toneMapping = Uncharted2ToneMapping
         }}
       >
         <a.group {...cameraProps}>

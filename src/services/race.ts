@@ -84,6 +84,4 @@ const [useRaceStore, apiRaceStore] = create<RaceStore>((set, get) => {
   return store
 })
 
-export default useRaceStore
-
 export { useRaceStore, apiRaceStore }

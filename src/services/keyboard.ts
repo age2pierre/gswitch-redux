@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Key } from 'ts-keycode-enum'
 
-export default function useKeyboard(
+export function useKeyboard(
   keycode: Key,
   event: 'keydown' | 'keyup',
   callback: (ev: KeyboardEvent) => void,

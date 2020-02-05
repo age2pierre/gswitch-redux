@@ -11,8 +11,8 @@ import {
 } from '@blueprintjs/core'
 import React, { FunctionComponent } from 'react'
 import { Link } from 'react-router-dom'
-import useEditorStore from '../services/editor'
-import pickFunc from '../services/pickFunc'
+import { useEditorStore } from '../services/editor'
+import { pickFunc } from '../services/pickFunc'
 
 export const EditorBar: FunctionComponent<{
   onCleanLevel: () => void
@@ -62,5 +62,3 @@ export const EditorBar: FunctionComponent<{
     </Navbar>
   )
 }
-
-export default EditorBar

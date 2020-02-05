@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react'
 import { a, useSpring } from 'react-spring/three'
 import { Canvas } from 'react-three-fiber'
-import * as THREE from 'three'
-import useLevelStore from '../services/level'
-import pickFunc from '../services/pickFunc'
-import Block from './Block'
-import Camera from './Camera'
-import CollisionsProvider from './CollisionProvider'
-import Player from './Player'
+import { GammaEncoding, Uncharted2ToneMapping } from 'three'
+import { useLevelStore } from '../services/level'
+import { pickFunc } from '../services/pickFunc'
+import { Block } from './Block'
+import { Camera } from './Camera'
+import { CollisionsProvider } from './CollisionProvider'
+import { Player } from './Player'
 
 const PLAYER_ID = [0, 1, 2, 3, 4, 5] as const
 
-export default function Game() {
+export const Game = () => {
   const items = useLevelStore(state => state.items)
   const { loadFromStorage } = useLevelStore(pickFunc)
   useEffect(() => {
@@ -24,9 +24,8 @@ export default function Game() {
   return (
     <Canvas
       onCreated={({ gl }) => {
-        gl.gammaInput = true
-        gl.gammaOutput = true
-        gl.toneMapping = THREE.Uncharted2ToneMapping
+        gl.outputEncoding = GammaEncoding
+        gl.toneMapping = Uncharted2ToneMapping
       }}
     >
       <a.group {...cameraProps}>

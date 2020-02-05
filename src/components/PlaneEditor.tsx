@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useRef } from 'react'
 import { PointerEvent } from 'react-three-fiber'
 
-const PlaneEditor: FunctionComponent<{
+export const PlaneEditor: FunctionComponent<{
   onClick: (e: PointerEvent) => void
   gridSize?: number
 }> = ({ onClick, gridSize = 200 }) => {
@@ -20,5 +20,3 @@ const PlaneEditor: FunctionComponent<{
     </group>
   )
 }
-
-export default PlaneEditor

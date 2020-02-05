@@ -1,9 +1,9 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import Editor from './components/Editor'
-import Game from './components/Game'
+import { Editor } from './components/Editor'
+import { Game } from './components/Game'
 
-export default function App() {
+function App() {
   return (
     <Router>
       <Switch>
@@ -13,3 +13,5 @@ export default function App() {
     </Router>
   )
 }
+
+export { App }

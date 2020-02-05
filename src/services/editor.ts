@@ -32,6 +32,4 @@ const [useEditorStore, apiEditorStore] = create<EditorStore>(set => {
   return store
 })
 
-export default useEditorStore
-
 export { useEditorStore, apiEditorStore }

@@ -6,10 +6,10 @@ import {
   PLAYER_SPEED,
   PLAYER_STARTING_POINTS,
 } from '../services/constants'
-import useKeyboard from '../services/keyboard'
-import Dummy from './Dummy'
+import { useKeyboard } from '../services/keyboard'
+import { Dummy } from './Dummy'
 
-const Player: FunctionComponent<{
+export const Player: FunctionComponent<{
   id: number
 }> = ({ id }) => {
   // local state storing gravity direction
@@ -59,5 +59,3 @@ const Player: FunctionComponent<{
   } as const
   return <Dummy {...props} />
 }
-
-export default Player

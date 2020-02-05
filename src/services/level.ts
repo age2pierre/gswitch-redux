@@ -57,6 +57,4 @@ const [useLevelStore, apiLevelStore] = create<LevelStore>((set, get) => {
   return store
 })
 
-export default useLevelStore
-
 export { useLevelStore, apiLevelStore }

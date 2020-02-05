@@ -3,7 +3,7 @@ import { MeshStandardMaterial } from 'three'
 import { resource } from '../services/cachedRessource'
 import { useStaticHitbox } from '../services/collisions'
 
-const Asset: FunctionComponent<{
+export const Asset: FunctionComponent<{
   url: string
   x: number
   y: number
@@ -26,7 +26,7 @@ const Asset: FunctionComponent<{
   )
 }
 
-const Cube: FunctionComponent<{
+export const Cube: FunctionComponent<{
   x: number
   y: number
 }> = ({ x, y }) => (
@@ -36,7 +36,10 @@ const Cube: FunctionComponent<{
   </mesh>
 )
 
-const Block: FunctionComponent<{ x: number; y: number }> = ({ x, y }) => {
+export const Block: FunctionComponent<{ x: number; y: number }> = ({
+  x,
+  y,
+}) => {
   useStaticHitbox({ x, y })
   return (
     <Suspense fallback={<Cube x={x} y={y} />}>
@@ -44,5 +47,3 @@ const Block: FunctionComponent<{ x: number; y: number }> = ({ x, y }) => {
     </Suspense>
   )
 }
-
-export default Block

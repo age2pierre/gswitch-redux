@@ -5,7 +5,7 @@ import {
   PLAYER_WIDTH,
 } from '../services/constants'
 
-const Dummy: FunctionComponent<{
+export const Dummy: FunctionComponent<{
   x: number
   y: number
   gravity: 'up' | 'down'
@@ -39,5 +39,3 @@ const Dummy: FunctionComponent<{
     </mesh>
   </group>
 )
-
-export default Dummy
