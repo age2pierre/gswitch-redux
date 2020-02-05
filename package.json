@@ -24,12 +24,10 @@
   "lint-staged": {
     "*.{ts,tsx}": [
       "tslint --fix",
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "package.json": [
-      "sort-package-json",
-      "git add"
+      "sort-package-json"
     ]
   },
   "browserslist": [
