@@ -9,56 +9,72 @@ import {
   NavbarHeading,
   Slider,
 } from '@blueprintjs/core'
-import React, { FunctionComponent } from 'react'
-import { Link } from 'react-router-dom'
-import { useEditorStore } from '../services/editor'
-import { pickFunc } from '../services/pickFunc'
+import React from 'react'
+import { Tools } from '../services/editor'
 
-export const EditorBar: FunctionComponent<{
+interface EditorBarProps {
+  /**
+   * the tool selected either eraser or pencil
+   */
+  tool: Tools
+  /**
+   * handle changing tool in the store
+   */
+  onSetTool: (t: Tools) => void
+  /**
+   * current position of the camera proportionnaly to the level length
+   */
+  cameraScroll: number
+  /**
+   * handle the event slider to set the camera postion, cs is between 0 & 1
+   */
+  onSlideCamera: (cs: number) => void
+  /**
+   * handler for removing all blocks from the stage
+   */
   onCleanLevel: () => void
-}> = props => {
-  const tool = useEditorStore(state => state.tool)
-  const cameraScroll = useEditorStore(state => state.cameraScroll)
-  const { setTool, slideCamera } = useEditorStore(pickFunc)
-  return (
-    <Navbar fixedToTop={true} className={Classes.DARK}>
-      <NavbarGroup>
-        <NavbarHeading>GSwitcher</NavbarHeading>
-        <NavbarDivider />
-        <Link to="/">
-          <Button icon="play" intent="success" />
-        </Link>
-        <Button
-          className="m-l-md"
-          onClick={props.onCleanLevel}
-          icon="clean"
-          text="Clean level"
-        />
-        <ButtonGroup className="m-l-md">
-          <Button
-            icon="eraser"
-            onClick={() => setTool('eraser')}
-            active={tool === 'eraser'}
-          />
-          <Button
-            icon="edit"
-            onClick={() => setTool('pencil')}
-            active={tool === 'pencil'}
-          />
-        </ButtonGroup>
-      </NavbarGroup>
-      <NavbarGroup align="right">
-        <Icon icon="camera" />
-        <Slider
-          className="m-l-lg"
-          min={0}
-          max={1}
-          stepSize={0.0001}
-          onChange={slideCamera}
-          labelRenderer={false}
-          value={cameraScroll}
-        />
-      </NavbarGroup>
-    </Navbar>
-  )
+  /**
+   * handler start game and leave editor
+   */
+  onPlay: () => void
 }
+
+export const EditorBar: React.FC<EditorBarProps> = props => (
+  <Navbar fixedToTop={true} className={Classes.DARK}>
+    <NavbarGroup>
+      <NavbarHeading>GSwitchRedux</NavbarHeading>
+      <NavbarDivider />
+      <Button onClick={props.onPlay} icon="play" intent="success" />
+      <Button
+        className="m-l-md"
+        onClick={props.onCleanLevel}
+        icon="clean"
+        text="Clean level"
+      />
+      <ButtonGroup className="m-l-md">
+        <Button
+          icon="eraser"
+          onClick={() => props.onSetTool('eraser')}
+          active={props.tool === 'eraser'}
+        />
+        <Button
+          icon="edit"
+          onClick={() => props.onSetTool('pencil')}
+          active={props.tool === 'pencil'}
+        />
+      </ButtonGroup>
+    </NavbarGroup>
+    <NavbarGroup align="right">
+      <Icon icon="camera" />
+      <Slider
+        className="m-l-lg"
+        min={0}
+        max={1}
+        stepSize={0.0001}
+        onChange={props.onSlideCamera}
+        labelRenderer={false}
+        value={props.cameraScroll}
+      />
+    </NavbarGroup>
+  </Navbar>
+)
