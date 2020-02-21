@@ -1,5 +1,5 @@
 import { Collisions, Polygon } from 'detect-collisions'
-import { maxBy } from 'lodash-es'
+import maxBy from 'lodash-es/maxBy'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useFrame } from 'react-three-fiber'
 import { PLAYER_HEIGHT, PLAYER_PADDING, PLAYER_WIDTH } from './constants'

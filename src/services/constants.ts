@@ -1,29 +1,34 @@
 import { Key } from 'ts-keycode-enum'
 
-export const ANIM_TO_COLORS = {
-  idle: 'cyan',
-  running: 'red',
-  falling: 'blue',
-  spinning: 'yellow',
-} as const
+export const START_X = -4.5
 
-export const START_LINE_X = -4.5
-export const PLAYER_STARTING_POINTS = [
-  [START_LINE_X, -5 - 0.25],
-  [START_LINE_X, -3.5 - 0.25],
-  [START_LINE_X, -1 - 0.25],
-  [START_LINE_X, 0.5 - 0.25],
-  [START_LINE_X, 3 - 0.25],
-  [START_LINE_X, 4.5 - 0.25],
-] as const
-
-export const PLAYER_KEYMAP = [
-  Key.M,
-  Key.X,
-  Key.RightArrow,
-  Key.A,
-  Key.N,
-  Key.Shift,
+export const PLAYERS = [
+  {
+    name: 'M',
+    startPoint: [START_X, -6],
+    color: 'yellow',
+    code: Key.M,
+  },
+  {
+    name: 'X',
+    startPoint: [START_X, -4.5],
+    color: 'royalblue',
+    code: Key.X,
+  },
+  {
+    name: '→',
+    startPoint: [START_X, -2],
+    color: 'magenta',
+    code: Key.RightArrow,
+  },
+  { name: 'A', startPoint: [START_X, -0.5], color: 'white', code: Key.A },
+  { name: 'N', startPoint: [START_X, 2], color: 'orangered', code: Key.N },
+  {
+    name: '⇧',
+    startPoint: [START_X, 3.5],
+    color: 'teal',
+    code: Key.Shift,
+  },
 ] as const
 
 export const PLAYER_WIDTH = 1

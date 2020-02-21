@@ -1,17 +1,10 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { useState } from 'react'
 import { useAgentHitbox } from '../services/collisions'
-import {
-  PLAYER_ANGLE,
-  PLAYER_KEYMAP,
-  PLAYER_SPEED,
-  PLAYER_STARTING_POINTS,
-} from '../services/constants'
+import { PLAYER_ANGLE, PLAYERS, PLAYER_SPEED } from '../services/constants'
 import { useKeyboard } from '../services/keyboard'
-import { Dummy } from './Dummy'
+import { Dummy, DummyProps } from './Dummy'
 
-export const Player: FunctionComponent<{
-  id: number
-}> = ({ id }) => {
+export const Player = (props: { id: number }) => {
   // local state storing gravity direction
   const [gravity, setGravity] = useState<'up' | 'down'>('down')
   // local state storing character animation
@@ -29,8 +22,8 @@ export const Player: FunctionComponent<{
   } = useAgentHitbox({
     directionInit: -PLAYER_ANGLE,
     speedInit: PLAYER_SPEED,
-    xInit: PLAYER_STARTING_POINTS[id][0],
-    yInit: PLAYER_STARTING_POINTS[id][1],
+    xInit: PLAYERS[props.id].startPoint[0],
+    yInit: PLAYERS[props.id].startPoint[1],
     onEndTouch: () => {
       if (animation !== 'spinning') {
         setAnim('falling')
@@ -41,7 +34,7 @@ export const Player: FunctionComponent<{
     },
   })
   // on key pressed switch gravity direction only if feet are touching
-  useKeyboard(PLAYER_KEYMAP[id], 'keydown', () => {
+  useKeyboard(PLAYERS[props.id].code, 'keydown', () => {
     if (
       (gravity === 'down' && isTouchingBot) ||
       (gravity === 'up' && isTouchingTop)
@@ -51,11 +44,13 @@ export const Player: FunctionComponent<{
       setGravity(gravity === 'up' ? 'down' : 'up')
     }
   })
-  const props = {
+  const assetProps: DummyProps = {
     gravity,
     animation,
     x,
     y,
+    ctrlKey: PLAYERS[props.id].name,
+    color: PLAYERS[props.id].color,
   } as const
-  return <Dummy {...props} />
+  return <Dummy {...assetProps} />
 }

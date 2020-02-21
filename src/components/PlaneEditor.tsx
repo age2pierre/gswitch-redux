@@ -1,15 +1,16 @@
-import React, { FunctionComponent, useRef } from 'react'
+import React, { useRef } from 'react'
 import { PointerEvent } from 'react-three-fiber'
 
-export const PlaneEditor: FunctionComponent<{
+export const PlaneEditor = (props: {
   onClick: (e: PointerEvent) => void
   gridSize?: number
-}> = ({ onClick, gridSize = 200 }) => {
+}) => {
+  const gridSize = props.gridSize ?? 200
   const ref = useRef()
 
   return (
     <group>
-      <mesh ref={ref} onClick={onClick}>
+      <mesh ref={ref} onClick={props.onClick}>
         <planeGeometry attach="geometry" args={[gridSize, gridSize]} />
         <meshStandardMaterial attach="material" opacity={0.1} alphaTest={0.5} />
       </mesh>

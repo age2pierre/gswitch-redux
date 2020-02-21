@@ -8,8 +8,7 @@ import { Block } from './Block'
 import { Camera } from './Camera'
 import { CollisionsProvider } from './CollisionProvider'
 import { Player } from './Player'
-
-const PLAYER_ID = [0, 1, 2, 3, 4, 5] as const
+import { PLAYERS } from '../services/constants'
 
 export const Game = () => {
   const items = useLevelStore(state => state.items)
@@ -23,6 +22,7 @@ export const Game = () => {
   }))
   return (
     <Canvas
+      concurrent={true}
       onCreated={({ gl }) => {
         gl.outputEncoding = GammaEncoding
         gl.toneMapping = Uncharted2ToneMapping
@@ -30,12 +30,12 @@ export const Game = () => {
     >
       <a.group {...cameraProps}>
         <Camera />
-        <pointLight position={[0, 0, 5]} />
+        <pointLight position={[0, 0, 5]} intensity={0.9} />
       </a.group>
-      <ambientLight />
+      <ambientLight intensity={0.1} />
       <CollisionsProvider>
-        {PLAYER_ID.map(id => (
-          <Player key={id} id={id} />
+        {PLAYERS.map((p, i) => (
+          <Player key={p.name} id={i} />
         ))}
         {items.map(({ x, y }) => (
           <Block key={`${x}${y}`} x={x} y={y} />
@@ -44,3 +44,7 @@ export const Game = () => {
     </Canvas>
   )
 }
+
+// Named export doesn't work for lazy loading
+// tslint:disable-next-line: no-default-export
+export default Game

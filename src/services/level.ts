@@ -1,5 +1,6 @@
-import { isEqual, uniqWith } from 'lodash-es'
-import create from 'zustand'
+import isEqual from 'lodash-es/isEqual'
+import uniqWith from 'lodash-es/uniqWith'
+import { create } from 'zustand'
 
 export interface Block {
   x: number

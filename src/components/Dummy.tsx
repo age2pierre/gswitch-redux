@@ -1,41 +1,39 @@
-import React, { FunctionComponent } from 'react'
-import {
-  ANIM_TO_COLORS,
-  PLAYER_HEIGHT,
-  PLAYER_WIDTH,
-} from '../services/constants'
+import React from 'react'
+import { Capsule } from './Capsule'
+import { Dom } from 'react-three-fiber'
 
-export const Dummy: FunctionComponent<{
+export interface DummyProps {
   x: number
   y: number
   gravity: 'up' | 'down'
   animation: 'idle' | 'running' | 'falling' | 'spinning'
-}> = props => (
-  <group
-    position={[props.x, props.y, 0]}
-    rotation={[0, 0, props.gravity === 'up' ? Math.PI : 0]}
-  >
-    <mesh position={[0, PLAYER_HEIGHT / 2 - PLAYER_WIDTH / 2, 0]}>
-      <sphereBufferGeometry
-        attach="geometry"
-        args={[PLAYER_WIDTH / 2, 16, 10]}
-      />
-      <meshStandardMaterial
-        attach="material"
-        color={ANIM_TO_COLORS[props.animation]}
-      />
-    </mesh>
-    <mesh position={[0, -PLAYER_HEIGHT / 6, 0]}>
-      <cylinderGeometry
-        attach="geometry"
-        args={[
-          0.7 * (PLAYER_WIDTH / 2),
-          PLAYER_WIDTH / 2,
-          (PLAYER_HEIGHT * 2) / 3,
-          16,
-        ]}
-      />
-      <meshStandardMaterial attach="material" color="cyan" opacity={0.3} />
-    </mesh>
-  </group>
-)
+  ctrlKey: string
+  color: string
+}
+
+export const Dummy = (props: DummyProps) => {
+  return (
+    <group position={[props.x, props.y, 0]}>
+      <Capsule x={-0.5} y={0.25} color={props.color} />
+      <Dom
+        position={[-1.5, 0.75, 0]}
+        center={true}
+        style={{
+          padding: 3,
+          width: 70,
+          height: 70,
+          color: props.color,
+          borderRadius: 7,
+          border: `3px solid ${props.color}`,
+          background: 'rgb(26, 26, 26)',
+        }}
+      >
+        <div>
+          <div>{props.ctrlKey}</div>
+          <div>{props.gravity}</div>
+          <div>{props.animation}</div>
+        </div>
+      </Dom>
+    </group>
+  )
+}

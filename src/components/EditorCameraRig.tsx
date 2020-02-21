@@ -18,6 +18,14 @@ export const EditorCameraRig = () => {
 
   return (
     <a.group {...cameraProps}>
+      <spotLight
+        angle={Math.PI / 3}
+        castShadow={true}
+        shadowMapHeight={2048}
+        shadowMapWidth={2048}
+        position={[0, 24, 24]}
+        intensity={1}
+      />
       <Camera />
     </a.group>
   )
