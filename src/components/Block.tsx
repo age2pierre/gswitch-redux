@@ -1,27 +1,36 @@
-import React from 'react'
-import { MeshStandardMaterial } from 'three'
+import React, { useRef } from 'react'
+import { ReactThreeFiber, useLoader } from 'react-three-fiber'
+import { Group, Material, Mesh } from 'three'
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { useStaticHitbox } from '../services/collisions'
-import { useLoader } from 'react-three-fiber'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
-export const CrateAsset = () => {
-  const gltf = useLoader(GLTFLoader, '/static/crate.glb')
+export function CrateAsset(
+  props: Partial<ReactThreeFiber.Object3DNode<Group, typeof Group>>,
+) {
+  const group = useRef()
+  const { nodes, materials } = useLoader(
+    GLTFLoader,
+    '/static/crate.glb',
+  ) as GLTF & {
+    nodes: Record<string, Mesh>
+    materials: Record<string, Material>
+  }
   return (
-    <mesh
-      castShadow={true}
-      receiveShadow={true}
-      name="crate_mesh"
-      scale={[0.02, 0.02, 0.02]}
-    >
-      <bufferGeometry attach="geometry" {...gltf?.__$[1].geometry} />
-      <meshStandardMaterial
-        attach="material"
-        {...(gltf?.__$[1].material as MeshStandardMaterial)}
-      />
-    </mesh>
+    <group ref={group} {...props}>
+      <scene name="Scene">
+        <mesh
+          castShadow={true}
+          receiveShadow={true}
+          material={materials.crate3}
+          geometry={nodes.crate3_crate3_0.geometry}
+          name="crate3_crate3_0"
+          position={[0, 0, 0]}
+          scale={[0.02, 0.02, 0.02]}
+        />
+      </scene>
+    </group>
   )
 }
-
 export const Cube = () => {
   return (
     <mesh position={[0, 0.5, 0]}>
