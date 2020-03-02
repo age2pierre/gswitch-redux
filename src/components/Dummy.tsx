@@ -1,12 +1,13 @@
 import React from 'react'
 import { Capsule } from './Capsule'
+import { Robot } from './Robot'
 import { Dom } from 'react-three-fiber'
 
 export interface DummyProps {
   x: number
   y: number
   gravity: 'up' | 'down'
-  animation: 'idle' | 'running' | 'falling' | 'spinning'
+  animation: 'idle' | 'running'
   ctrlKey: string
   color: string
 }
@@ -14,7 +15,16 @@ export interface DummyProps {
 export const Dummy = (props: DummyProps) => {
   return (
     <group position={[props.x, props.y, 0]}>
-      <Capsule x={-0.5} y={0.25} color={props.color} />
+      <React.Suspense
+        fallback={<Capsule x={-0.5} y={0.25} color={props.color} />}
+      >
+        <Robot
+          mainColor={props.color}
+          targetAnimation={
+            props.animation === 'running' ? 'Robot_Running' : 'Robot_Idle'
+          }
+        />
+      </React.Suspense>
       <Dom
         position={[-1.5, 0.75, 0]}
         center={true}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useMemo } from 'react'
 import { config } from 'react-spring'
 import { Spring } from 'react-spring/renderprops'
 import { useFrame, useLoader } from 'react-three-fiber'
@@ -12,8 +12,10 @@ import {
   MeshStandardMaterial,
   Object3D,
   SkinnedMesh,
+  Scene,
 } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils'
 
 interface RobotAnimationsActions {
   // Robot_Dance: AnimationAction
@@ -49,27 +51,28 @@ function AnimableRobot(props: RobotProps) {
 
   const group = useRef<Group>()
   const gltf = useLoader(GLTFLoader, '/static/robot.glb')
-
-  useEffect(() => {
+  const scene = useMemo(() => {
+    const _scene = SkeletonUtils.clone(gltf.scene) as Scene
     const mapNameToColor = {
       Grey: new Color(0.43, 0.43, 0.43),
       Main: new Color(mainColor),
       Black: new Color(0.06, 0.06, 0.06),
     } as const
-    Object.values(gltf.nodes).forEach(node => {
-      node.traverse(childNode => {
-        if (
-          isAnyMesh(childNode) &&
-          isMeshStandardMaterial(childNode.material)
-        ) {
-          childNode.material.color =
+    _scene.traverse(childNode => {
+      if (isAnyMesh(childNode)) {
+        childNode.castShadow = true
+        childNode.receiveShadow = true
+        if (isMeshStandardMaterial(childNode.material)) {
+          childNode.material = childNode.material.clone()
+          ;(childNode.material as MeshStandardMaterial).color =
             mapNameToColor[
               childNode.material.name as keyof typeof mapNameToColor
             ]
         }
-      })
+      }
     })
-  }, [gltf, mainColor])
+    return _scene
+  }, [mainColor, gltf])
 
   const actions = useRef<RobotAnimationsActions>()
   const [mixer] = useState(
@@ -98,10 +101,11 @@ function AnimableRobot(props: RobotProps) {
   }, [])
 
   useEffect(() => {
-    actions.current?.Robot_Idle.setEffectiveWeight(animationWeights.Robot_Idle)
-    actions.current?.Robot_Running.setEffectiveWeight(
-      animationWeights.Robot_Running,
-    )
+    Object.keys(animationWeights).forEach(k => {
+      ;(actions.current ?? {})[
+        k as keyof RobotAnimationsWeights
+      ]?.setEffectiveWeight(animationWeights[k as keyof RobotAnimationsWeights])
+    })
   }, [animationWeights])
 
   return (
@@ -111,9 +115,7 @@ function AnimableRobot(props: RobotProps) {
       rotation={[0, Math.PI / 2, 0]}
       scale={[0.35, 0.35, 0.35]}
     >
-      <primitive object={gltf.nodes.Bone} />
-      <primitive object={gltf.nodes.HandL} />
-      <primitive object={gltf.nodes.HandR} />
+      <primitive object={scene} dispose={null} />
     </group>
   )
 }

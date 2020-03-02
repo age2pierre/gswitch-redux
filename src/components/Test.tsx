@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react'
-import { Canvas, extend, useFrame, useThree, Dom } from 'react-three-fiber'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import React, { useEffect, useRef, useState } from 'react'
+import { Canvas, Dom, extend, useFrame, useThree } from 'react-three-fiber'
 import { GammaEncoding, Uncharted2ToneMapping } from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { Robot } from './Robot'
 
 extend({ OrbitControls })
@@ -36,7 +36,14 @@ export const Test = () => {
     >
       <Controls />
       <gridHelper args={[20, 20, 0x880000]} rotation={[Math.PI / 2, 0, 0]} />
-      <pointLight position={[0, 5, 5]} />
+      <spotLight
+        angle={Math.PI / 3}
+        castShadow={true}
+        shadowMapHeight={2048}
+        shadowMapWidth={2048}
+        position={[0, 18, 18]}
+        intensity={1}
+      />
       <Dom
         position={[-1.5, 0.75, 0]}
         center={true}
@@ -59,6 +66,14 @@ export const Test = () => {
           targetAnimation={isRunning ? 'Robot_Running' : 'Robot_Idle'}
         />
       </React.Suspense>
+      <group position={[2, 0, 0]}>
+        <React.Suspense fallback={null}>
+          <Robot
+            mainColor={'lime'}
+            targetAnimation={isRunning ? 'Robot_Idle' : 'Robot_Running'}
+          />
+        </React.Suspense>
+      </group>
     </Canvas>
   )
 }
