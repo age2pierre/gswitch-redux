@@ -3,6 +3,7 @@ import { Canvas, Dom, extend, useFrame, useThree } from 'react-three-fiber'
 import { GammaEncoding, Uncharted2ToneMapping } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { Robot } from './Robot'
+import { OrbitController } from './OrbitController'
 
 extend({ OrbitControls })
 
@@ -34,7 +35,7 @@ export const Test = () => {
         gl.toneMapping = Uncharted2ToneMapping
       }}
     >
-      <Controls />
+      <OrbitController />
       <gridHelper args={[20, 20, 0x880000]} rotation={[Math.PI / 2, 0, 0]} />
       <spotLight
         angle={Math.PI / 3}
