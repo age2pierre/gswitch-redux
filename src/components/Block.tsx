@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
+import React, { useRef, Ref } from 'react'
 import { ReactThreeFiber, useLoader } from 'react-three-fiber'
-import { Group, Material, Mesh } from 'three'
+import { Group, Material, Mesh, ColorLike, Object3D } from 'three'
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { useStaticHitbox } from '../services/collisions'
 
@@ -31,20 +31,34 @@ export function CrateAsset(
     </group>
   )
 }
-export const Cube = () => {
-  return (
-    <mesh position={[0, 0.5, 0]}>
-      <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshStandardMaterial attach="material" color={'orangered'} />
-    </mesh>
-  )
-}
+
+export const Cube = React.forwardRef(
+  (
+    props: ReactThreeFiber.Object3DNode<Mesh, typeof Mesh> & {
+      width?: number
+      height?: number
+      color?: ColorLike
+    },
+    ref: Ref<Object3D | undefined>,
+  ) => {
+    const { width = 1, height = 1 } = props
+    return (
+      <mesh {...props} ref={ref}>
+        <boxBufferGeometry attach="geometry" args={[width, height, 1]} />
+        <meshStandardMaterial
+          attach="material"
+          color={props.color ?? 'orangered'}
+        />
+      </mesh>
+    )
+  },
+)
 
 export const Block = (props: { x: number; y: number }) => {
   useStaticHitbox({ x: props.x, y: props.y })
   return (
     <group position={[props.x + 0.5, props.y, 0]}>
-      <React.Suspense fallback={<Cube />}>
+      <React.Suspense fallback={<Cube position={[0, 0.5, 0]} />}>
         <CrateAsset />
       </React.Suspense>
     </group>

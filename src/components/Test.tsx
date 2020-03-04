@@ -1,25 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Canvas, Dom, extend, useFrame, useThree } from 'react-three-fiber'
+import React, { useEffect, useState } from 'react'
+import { Canvas, Dom } from 'react-three-fiber'
 import { GammaEncoding, Uncharted2ToneMapping } from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitController } from './OrbitController'
 import { Robot } from './Robot'
-
-extend({ OrbitControls })
-
-export function Controls() {
-  const orbitCtrlRef = useRef<OrbitControls>()
-  const { camera, gl } = useThree()
-  useFrame(() => orbitCtrlRef.current?.update())
-  return (
-    <orbitControls
-      ref={orbitCtrlRef}
-      args={[camera, gl.domElement]}
-      enableDamping={true}
-      dampingFactor={0.1}
-      rotateSpeed={0.5}
-    />
-  )
-}
 
 export const Test = () => {
   const [isRunning, setRunning] = useState(false)
@@ -34,7 +17,7 @@ export const Test = () => {
         gl.toneMapping = Uncharted2ToneMapping
       }}
     >
-      <Controls />
+      <OrbitController />
       <gridHelper args={[20, 20, 0x880000]} rotation={[Math.PI / 2, 0, 0]} />
       <spotLight
         angle={Math.PI / 3}

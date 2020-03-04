@@ -3,12 +3,9 @@ import maxBy from 'lodash-es/maxBy'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useFrame } from 'react-three-fiber'
 import { PLAYER_HEIGHT, PLAYER_PADDING, PLAYER_WIDTH } from './constants'
+import { notEmpty } from './notEmpty'
 
-export const context = createContext<Collisions>(new Collisions())
-
-function notEmpty<T>(value: T | null | undefined): value is T {
-  return value != null
-}
+export const context = createContext(new Collisions())
 
 /**
  * Hooks used to incarnate static physical agent into the collision engine; aka box of 1x1.

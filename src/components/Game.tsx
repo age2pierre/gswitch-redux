@@ -23,6 +23,7 @@ export const Game = () => {
   return (
     <Canvas
       concurrent={true}
+      noEvents={true}
       onCreated={({ gl }) => {
         gl.outputEncoding = GammaEncoding
         gl.toneMapping = Uncharted2ToneMapping
