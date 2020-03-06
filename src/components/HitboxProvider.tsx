@@ -8,11 +8,9 @@ export const HitboxProvider = (props: { children: React.ReactNode }) => {
     system: new Collisions(),
     metadataBodiesMap: new Map<Body, MetadataBody>(),
   }))
+  useFrame(({ gl, scene, camera }) => gl.render(scene, camera), 0)
   useFrame(() => {
-    // TODO Remove after testing done
-    // tslint:disable-next-line: no-console
-    console.log('HitboxProvider updating collision system')
     ctx.system.update()
-  }, 2)
+  }, 20)
   return <hitboxContext.Provider value={ctx} children={props.children} />
 }

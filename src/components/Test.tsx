@@ -2,7 +2,30 @@ import React, { useEffect, useState } from 'react'
 import { Canvas, Dom } from 'react-three-fiber'
 import { GammaEncoding, Uncharted2ToneMapping } from 'three'
 import { OrbitController } from './OrbitController'
-import { Robot } from './Robot'
+import { HitboxProvider } from './HitboxProvider'
+import { useHitboxBody } from '../services/hitbox'
+import { Cube } from './Block'
+
+const Box = (props: { name: string }) => {
+  useHitboxBody({
+    bodyDef: {
+      type: 'Polygon',
+    },
+    metadata: {
+      tags: ['STATIC', props.name],
+    },
+    onBeforeUpdate: () => {
+      // tslint:disable-next-line: no-console
+      console.log(`Box${props.name} onBeforeUpdate`)
+    },
+    onAfterUpdate: () => {
+      // tslint:disable-next-line: no-console
+      console.log(`Box${props.name} onAfterUpdate`)
+    },
+  })
+
+  return <Cube />
+}
 
 export const Test = () => {
   const [isRunning, setRunning] = useState(false)
@@ -28,7 +51,7 @@ export const Test = () => {
         intensity={1}
       />
       <Dom
-        position={[-1.5, 0.75, 0]}
+        position={[-2, 2, 0]}
         center={true}
         prepend={true}
         style={{
@@ -43,20 +66,12 @@ export const Test = () => {
       >
         <div>{isRunning ? 'Running' : 'Idle'}</div>
       </Dom>
-      <React.Suspense fallback={null}>
-        <Robot
-          mainColor={'orangered'}
-          targetAnimation={isRunning ? 'Robot_Running' : 'Robot_Idle'}
-        />
-      </React.Suspense>
-      <group position={[2, 0, 0]}>
-        <React.Suspense fallback={null}>
-          <Robot
-            mainColor={'lime'}
-            targetAnimation={isRunning ? 'Robot_Idle' : 'Robot_Running'}
-          />
-        </React.Suspense>
-      </group>
+      {isRunning ? (
+        <HitboxProvider>
+          <Box key="A" name="A" />
+          <Box key="B" name="B" />
+        </HitboxProvider>
+      ) : null}
     </Canvas>
   )
 }

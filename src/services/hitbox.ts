@@ -34,9 +34,9 @@ interface CircleDef {
 
 interface HitboxHookOptions {
   bodyDef: PolygonDef | CircleDef
-  metadata: Omit<MetadataBody, 'id'>
-  onBeforeUpdate: (body: Body, ctx: HitboxContext) => void
-  onAfterUpdate: (body: Body, ctx: HitboxContext) => void
+  metadata?: Partial<Omit<MetadataBody, 'id'>>
+  onBeforeUpdate?: (body: Body, ctx: HitboxContext) => void
+  onAfterUpdate?: (body: Body, ctx: HitboxContext) => void
 }
 
 export const hitboxContext = createContext<HitboxContext>({
@@ -89,6 +89,7 @@ export const useHitboxBody = (options: HitboxHookOptions) => {
     ctx.system.insert(body)
     ctx.metadataBodiesMap.set(body, {
       id: Symbol('HitboxID'),
+      tags: [],
       ...options.metadata,
     })
 
@@ -99,10 +100,10 @@ export const useHitboxBody = (options: HitboxHookOptions) => {
   }, [])
 
   useFrame(() => {
-    options.onBeforeUpdate(body, ctx)
-  }, 1)
+    options.onBeforeUpdate?.(body, ctx)
+  }, 10)
 
   useFrame(() => {
-    options.onAfterUpdate(body, ctx)
-  }, 3)
+    options.onAfterUpdate?.(body, ctx)
+  }, 30)
 }
