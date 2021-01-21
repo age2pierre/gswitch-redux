@@ -39,7 +39,7 @@
     "@blueprintjs/core": "3.21.0",
     "@blueprintjs/icons": "3.13.0",
     "detect-collisions": "2.4.4",
-    "immer": "5.3.6",
+    "immer": "8.0.1",
     "lodash-es": "4.17.15",
     "react": "16.13.0",
     "react-dom": "16.13.0",
